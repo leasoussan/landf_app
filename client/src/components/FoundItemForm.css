@@ -1,0 +1,13 @@
+.add_item_form{
+    margin-left: 5rem;
+    display: flex;
+    flex-direction: column;
+    border: solid 3 pix darkblue;
+    width: 50%;
+
+}
+
+.add_item_form > Lable {
+    border: solid 3px red;
+    width: 300px;
+}

@@ -1,0 +1,108 @@
+// // How To Creat Node Back end and React Front end together
+
+// // Lunch NODE- 
+// // in Folder - 
+// npm init 
+// // then install all necessary componenent
+
+
+// axios  
+// // Promise based HTTP client for the browser and node.js
+// cors 
+// // CORS is a node.js package for providing a Connect/Express middleware that can be used 
+// // to enable CORS with various options.
+
+// express 
+// // Fast, unopinionated, minimalist web framework for Node.js.
+// nodemon 
+
+// // nodemon is a tool that helps develop Node.js based applications by automatically restarting 
+// // the node application when file changes in the directory are detected.
+
+// jsonwebtoken 
+// // An implementation of JSON Web Tokens.
+
+
+
+// bcrypt
+// // A library to help you hash passwords.
+
+// cookie-parser 
+// // header and populate req.cookies with an object keyed by the cookie names.
+// //  Optionally you may enable signed cookie support by passing a secret string, which 
+// // assigns req.secret so it may be used by other middleware.
+
+// jwt-decode
+// // >>>>>>>>>>>>>>>>>>>>> This library doesn't validate the token, any well formed JWT can be decoded. 
+// // You should validate the token in your server-side logic by using something like express-jwt, koa-jwt, 
+// // Owin Bearer JWT, etc.
+
+// pg 
+// // >>>>Non-blocking PostgreSQL client for Node.js. Pure JavaScript and optional native libpq bindings.
+
+
+// pg-hstore 
+// // >>>>>> A node package for serializing and deserializing JSON data to hstore format
+
+/
+
+knex 
+Knex can be used as an SQL query builder in both Node.JS and the browser, limited to WebSQL's constraints (like the inability to drop tables or read schemas). 
+
+// // Sequelize is an easy-to-use and promise-based Node.js ORM tool for Postgres, MySQL, 
+// // MariaDB, SQLite, DB2, Microsoft SQL Server, and Snowflake. It features solid transaction support, 
+// // relations, eager and lazy loading, read replication and more.
+
+
+
+// // > create server.js import and .env folder 
+
+// // -----
+// // 
+// // create database and copnnect datat base 
+
+ELEPHANT QSL - to host DB
+
+// // ____________________________________Create a database 
+// // 1) Elephane create database
+// // 2) install knex install pg
+// // 3) set up .env with data 
+// // create data folder with products.js for any data
+
+// // in thepg admin - create db with detail of server and in advance- cput the db name in restricted 
+
+
+
+// // lunch react 
+// // sudo nmp i create-react-app  + create-react-app nameapp
+
+// // npm start 
+
+
+
+
+-------------------
+1- server.js 
+2- set up import and connextion 
+3- .dotenv set appfolder config - db set up with database
+4- create USER MODEL 
+5 -
+create token and bcryt system for user to login logout register and get users.
+
+
+----------create fron end 
+In the main folder create client folder 
+go interminal and create react app. 
+set up the reat app folders as requires  
+
+MAIN INSTALS
+
+axios 
+
+jwt-decode
+
+react
+
+react dom 
+react router domreact scripts
+web vitals

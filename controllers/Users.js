@@ -128,15 +128,15 @@ export const login = async (req, res) => {
         const user = await db('users')
         .leftOuterJoin('profile', 'users.id', 'profile.user_id')
         .where({email:req.body.email})
-        .select('email','password', 'user_id', 'profile_id')
+        .select('email','password', 'id', 'first_name')
         
         const match = await bcrypt.compare(req.body.password, user[0].password)
         if(!match) return res.status(400).json({msg:'Wrong password'});
-        
         const userId = user[0].id;
         const email = user[0].email;
+        const first_name = user[0].first_name;
 
-        const token = jwt.sign({userId, email}, process.env.ACCESS_TOKEN_SECRET,{
+        const token = jwt.sign({userId, email, first_name}, process.env.ACCESS_TOKEN_SECRET,{
             expiresIn :jwtExpirySeconds
         });
         
@@ -144,7 +144,7 @@ export const login = async (req, res) => {
             httpOnly:true,
             maxAge: jwtExpirySeconds * 1000
         });
-        res.json({token:token});
+        res.json({token:token, userId, email, first_name});
 
 
 
@@ -176,7 +176,7 @@ export const token = (req,res) => {
   const accessToken = req.cookies.accessToken || req.headers['x-access-token'];
 
   const decode = jwt_decode(accessToken);
-  console.log(decode.userId, decode.email);
+  console.log("ya here ", decode.userId, decode.email, decode.first_name);
 
   const token = jwt.sign({userId:decode.userId,email:decode.email}, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn:jwtExpirySeconds,

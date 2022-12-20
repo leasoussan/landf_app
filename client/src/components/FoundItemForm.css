@@ -1,13 +1,49 @@
-.add_item_form{
-    margin-left: 5rem;
+
+.modal-content {
+    display: flex;
+    align-items: center;
+    width: 80vh;
+    height: 90vh;
+}
+.modal-body {
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    height: 95%;
+    overflow-y: scroll;
+}
+
+.add_item_form {
+
     display: flex;
     flex-direction: column;
     border: solid 3 pix darkblue;
-    width: 50%;
+    width: 100%;
 
 }
 
-.add_item_form > Lable {
-    border: solid 3px red;
-    width: 300px;
+.form_layout{
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    height: 85%;
+   
+    
+}
+
+.input_conatainer {
+    width: 90%;
+    height: 3rem;
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+
+
+.modal-dialog {
+    margin-left: 2rem;
+    width: 90vw;
 }

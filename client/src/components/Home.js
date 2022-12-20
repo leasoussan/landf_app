@@ -1,55 +1,99 @@
-import {useContext, useState, useEffect} from 'react';
+import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import './FoundItemForm.css'
+import { useContext, useState, useEffect } from 'react';
 import jwt_decode from 'jwt-decode';
 import { navigate, useNavigate } from 'react-router-dom';
-import { AppContext } from '../App';
-import { Button } from '@mui/material';
+import { AppContext } from '../App.js';
 import FoundItemForm from './FoundItemForm.js'
+import { connect } from 'react-redux';
+import { addToLocatStorage } from '../helpers/storage.js';
+
 
 const Home = (props) => {
-    
-    // const {token, setToken} = useContext(AppContext)
-    
-    // const navigate = useNavigate()
-        
-    // useEffect (() => {
-    //    try{
-    //     console.log(token);
-    //     const decode = jwt_decode(token);
-    //     const expire = decode.exp;
-    //     if(expire * 1000 < new Date().getTime()){
-    //         navigate('/login')
-    //     }
+    const [show, setShow] = useState(false);
 
-    //    }
-    //    catch(e){
-    //     console.log(e);
-    //     setToken(null)
-    //     navigate('/login')
-    //    }
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
-    // },[token])
+    const { token, setToken } = useContext(AppContext);
+    const navigate = useNavigate();
 
-    const handleAddFound = (e)=>{
-        e.preventDefault();
-        console.log(e);
-        
-    }
+    useEffect(() => {
+        try {
+            console.log(localStorage);
+            const decode = jwt_decode(token);
+            const expire = decode.exp;
+            if (expire * 1000 < new Date().getTime()) {
+                navigate('/login')
+            }else{
+                // const user_id_token = decode.userId;
+                // localStorage.setItem('user_id',user_id_token )
+                // setUserId(user_id_token)
+            }
+        }
+        catch (e) {
+            console.log(e);
+            setToken(null)
+            navigate('/login')
+        }
 
-    const handleAddLost = (e)=>{
-        e.preventDefault();
-        console.log(e);
-    }
+    }, [token])
 
-    return(
-        <div>
-            <h1>Home</h1>
 
-            <Button id="found_item_btn" variant="contained" onClick={handleAddFound}>FOUND Something</Button>
-            <Button id="lost_item_btn" variant="contained" onClick={handleAddLost}>LOST Something</Button>
-<FoundItemForm/>
-            
-        </div>
+
+    return (
+        <>
+
+            <div>
+                <h1>Home</h1>
+                <h2> Welcome {}</h2>
+                <div>
+                    <Button variant="primary" onClick={handleShow}>
+                        Add Found Item
+                    </Button>
+
+                    <Modal
+                        show={show}
+                        onHide={handleClose}
+                        backdrop="static"
+                        keyboard={false}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Add Found Item</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+
+                            <FoundItemForm />
+
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>
+                                Close
+                            </Button>
+
+                        </Modal.Footer>
+                    </Modal>
+
+                </div>
+
+
+            </div>
+        </>
     )
 }
+const mapStateToProps = (state) => {
+    return {
+        // userId: state.user_id,
+    }
+}
 
-export default Home
+const mapDispatchToProps = (dispatch) => {
+    return {
+        // handleInsert: (trx) => dispatch(insert_trx(trx)),
+        // handleUpdate: (trx) => dispatch(update_trx(trx))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

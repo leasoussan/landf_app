@@ -12,7 +12,9 @@ const Nav = (props) => {
     const logout = async() => {
         try{
             const response = await axios.delete('/logout')
+            localStorage.clear()
             if(response.status === 200 || response.status === 204){
+               
                 navigate('/login')
             }
         }catch(e){

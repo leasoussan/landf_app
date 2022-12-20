@@ -2,10 +2,9 @@ import db from "../config/elephantsql.js"
 
 
 export const getCategory = (req,res) =>{
-    const {categories} = req.body
+    // const {categories} = req.body
     db('category')
     .select('*')
-    .returning('*')
     .then(rows => {
         res.json(rows)
     })
@@ -19,11 +18,11 @@ export const getCategory = (req,res) =>{
 
 
 export const getSubCat = (req,res) =>{
-    const {category} = req.body
+    // here i pass the category in the params``
+    const {category} = req.params
     db('sub_cat')
     .select('name', 'sub_cat_id')
     .where({cat_id:category})
-    .returning('*')
     .then(rows => {
         res.json(rows)
     })

@@ -1,5 +1,6 @@
 
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, createContext } from 'react';
 import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import LoginRegistrationForm from './components/LoginRegistrationForm.js';
@@ -9,7 +10,12 @@ import Users from './components/Users.js';
 import Nav from './components/Nav.js';
 import { Auth } from './auth/Auth';
 
+import {Provider} from 'react-redux'
+
+import {reducer} from './redux/reducer.js'
 export const AppContext = createContext(null)
+
+
 
 
 function App() {

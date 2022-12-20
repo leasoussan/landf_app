@@ -6,6 +6,6 @@ const back_end_router = express.Router()
 
 
 back_end_router.get('/category' , getCategory);
-back_end_router.get('/sub_cat' ,getSubCat );
+back_end_router.get('/sub_cat/:category' ,getSubCat);
 
 export default back_end_router

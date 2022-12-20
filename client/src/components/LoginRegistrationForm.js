@@ -4,12 +4,16 @@ import axios from 'axios';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { AppContext } from '../App';
+import { AppContext } from '../App.js';
+import { addToLocatStorage } from '../helpers/storage.js';
+
 
 const LoginRegistrationForm = (props) => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [userId, setUserId] = useState('');
+    const [first_name, setFirstName] = useState('');
     const [msg, setMsg] = useState('')
 
     const {setToken} = useContext(AppContext)
@@ -26,12 +30,12 @@ const LoginRegistrationForm = (props) => {
                         'Content-type': 'application/json'
                     }
                 })
-                console.log(response)
-                setToken(response.data.token)
+                setToken(response.data.token);
+                addToLocatStorage('user_id', response.data.userId);
+                addToLocatStorage('first_name', response.data.first_name )
                 navigate('/')
             } catch(e){
-                console.log(e.response.data)
-                setMsg(e.response.data.msg)
+                setMsg(e.msg)
             }
         }
         else{
@@ -43,7 +47,7 @@ const LoginRegistrationForm = (props) => {
                         'Content-type': 'application/json'
                     }
                 })
-                console.log(response.data)
+                // send.json({msg:'Register Succesfull'})
                 navigate('/login')
             } catch(e){
                 console.log(e.response.data)

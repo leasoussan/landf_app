@@ -123,7 +123,7 @@ export const createProfile = async(req, res) => {
 
 export const login = async (req, res) => {
     const { email, password} = req.body;
-    const jwtExpirySeconds = 300
+    const jwtExpirySeconds = 600
     try{
         const user = await db('users')
         .leftOuterJoin('profile', 'users.id', 'profile.user_id')
@@ -144,7 +144,7 @@ export const login = async (req, res) => {
             httpOnly:true,
             maxAge: jwtExpirySeconds * 1000
         });
-        res.json({token:token, userId, email, first_name});
+        res.json({token:token});
 
 
 
@@ -172,7 +172,7 @@ export const logout = (req, res) => {
 
 
 export const token = (req,res) => {
-  const jwtExpirySeconds = 300
+  const jwtExpirySeconds = 600
   const accessToken = req.cookies.accessToken || req.headers['x-access-token'];
 
   const decode = jwt_decode(accessToken);

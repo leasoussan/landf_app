@@ -9,14 +9,12 @@ export const Auth = (props) => {
     const navigate = useNavigate()
 
     useEffect(()=>{
-
         const verify = async() => {
             try{
                 const response = await axios.get('/token')
                 setToken(response.data.token)
                 setRedirect(true)
             }catch(e){
-                console.log(e);
                 setToken(null)
                 navigate('/login')
             }

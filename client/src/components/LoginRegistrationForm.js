@@ -1,12 +1,12 @@
 import {useState, useeffect, useContext} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
+import {useNavigate,Navigate,  Link} from 'react-router-dom';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { AppContext } from '../App.js';
-import { addToLocatStorage } from '../helpers/storage.js';
-
+import { connect } from 'react-redux';
+import { get_token } from '../redux/actions.js';
 
 const LoginRegistrationForm = (props) => {
 
@@ -16,10 +16,10 @@ const LoginRegistrationForm = (props) => {
     const [first_name, setFirstName] = useState('');
     const [msg, setMsg] = useState('')
 
-    const {setToken} = useContext(AppContext)
-
+    const {token, setToken} = useContext(AppContext)
+   
     const navigate= useNavigate()
-
+  
     const handleClick = async () => {
         if(props.title === 'Login'){
             try{
@@ -31,8 +31,7 @@ const LoginRegistrationForm = (props) => {
                     }
                 })
                 setToken(response.data.token);
-                addToLocatStorage('user_id', response.data.userId);
-                addToLocatStorage('first_name', response.data.first_name )
+                this.props.get_token(response.data.token) 
                 navigate('/')
             } catch(e){
                 setMsg(e.msg)
@@ -57,6 +56,7 @@ const LoginRegistrationForm = (props) => {
     }
 
     return(
+         
         <div>
             <div>
                 <h3>{props.title} Form </h3>
@@ -85,4 +85,16 @@ const LoginRegistrationForm = (props) => {
     )
 }
 
-export default LoginRegistrationForm
+const mapStateToProps = state  => {
+    return {
+        store_token: state.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+        return {
+            get_token: (data)=> dispatch(get_token(data))
+        }
+    }
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginRegistrationForm)

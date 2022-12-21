@@ -1,9 +1,18 @@
-export const USER_ID = 'USER_ID'
+export const TOKEN = 'TOKEN'
+export const ADD_ITEM_LOAD_STORED = 'ADD_ITEM_LOAD_STORED'
 
+export const get_token =(token)=>{
 
-export const get_user_id =(id)=>{
     return{
-        type:USER_ID,
-        payload:id
+        type:TOKEN,
+        payload:token
+    }
+}
+
+
+export const get_stored_add_item_data =(data)=>{
+    return{
+        type:ADD_ITEM_LOAD_STORED,
+        payload:data
     }
 }

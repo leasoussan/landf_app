@@ -1,20 +1,20 @@
 import express from "express";
 import db from "../config/elephantsql.js";
-import { add_item } from "../controllers/Item.js";
+import { add_item, getUserFoundItem } from "../controllers/Item.js";
 const item_router = express.Router();
 
 
 // CRUD ITEMS FOUND
 // CREAT ONE GOAL
-item_router.post('/add_found_item/', add_item )
+item_router.post('/add_found_item', add_item)
 
 
 
-// EDIT GOAL
+// EDIT 
 // / Update - Put - Update/Modify a product
 item_router.put('/edit_item/:id', )
 
-
+item_router.get('/dashboard/:user_id', getUserFoundItem)
 
 
 

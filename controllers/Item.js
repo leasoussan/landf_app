@@ -4,8 +4,9 @@ import db from "../config/elephantsql.js";
 // CRUD ITEM FOUND
 // CREATE ONE GOAL
 export const add_item =(req, res) => {
-    console.log(req.body);
+    console.log("here test ", req.body);
     const {name,category_id,sub_category,lat,len,found_date, user_id,note,is_lost,is_found, resolved} =req.body;
+        
     db('item')
         .insert(req.body)
         .returning('*')
@@ -75,3 +76,43 @@ const edit_item = (req, res) => {
 
 
 }
+
+
+
+
+export const getUserFoundItem = (req, res) => {
+    console.log("icic cest req et toi ",req.params);
+    const {user_id} = req.params
+    db('item')
+        .select('*')
+        .where({user_id: user_id, is_found:true})
+        .returning('*')
+        .then(rows => {
+            if(rows.length === 0) {
+                  res.json({msg:"null"})
+            }  else{
+             
+                res.json(rows) 
+            }
+           
+        })
+        .catch(e => {
+            console.log(e);
+            res.status(404).json({ msg: "error" })
+        })
+}
+
+// export const getUsers = async (req,res) =>{
+//     console.log("icic cest req et toi ",req.params);
+//     console.log("thebody",req.body);
+//     try{
+//         const users = await db('users')
+//         .leftOuterJoin('profile', 'users.id', 'profile.user_id')
+//         .select('email','password', 'id', 'profile_id')
+//         .returning('*')
+//         res.json(users)
+//     }
+//     catch(e){
+//         console.log(e);
+//         res.status(404).json({msg:'not found'})    }
+// }

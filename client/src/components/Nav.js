@@ -9,27 +9,27 @@ import { AppContext } from '../App';
 
 const Nav = (props) => {
     const [redirect, setRedirect] = useState(false)
+    const [navuser_id, setUserId] = useState(false)
     const { token, setToken } = useContext(AppContext)
-    console.log(token);
+
+    // console.log(token);
     const navigate = useNavigate()
-    // const get_token = jwt_decode(token)
-    const user_id = 6
 
+    useEffect(()=>{
+        try{
+            const data = jwt_decode(token)
 
-    useEffect(() => {
-        const verify = async () => {
-            try {
-                const response = await axios.get('/token')
-                setToken(response.data.token)
-                setRedirect(true)
-            } catch (e) {
-                console.log(e);
-                setToken(null)
-                navigate('/login')
-            }
+            console.log("the data ",data.userId);
+            setUserId(data.userId)
+
         }
-        verify()
-    }, [])
+        catch(e){
+            console.log(e);
+        }
+    },[token])
+
+
+
 
     const logout = async () => {
         try {
@@ -48,7 +48,7 @@ const Nav = (props) => {
     if (token) {
         return (
             <Stack spacing={2} direction='row'>
-                <Button component={Link} to={`/dashboard/${user_id}`}>Dashboard</Button>
+                <Button component={Link} to={`/dashboard/${navuser_id}`}>Dashboard</Button>
                 <Button component={Link} to='/'>Home</Button>
                 <Button component={Link} to='/users'>Users</Button>
                 <Button onClick={logout}>Logout</Button>

@@ -5,7 +5,7 @@ export const FormInputLabel = (props) => {
     return (
         <>
             <div className="input_conatainer">
-                <label htmlFor={name}>{label}{value}</label>
+                <label htmlFor={name}>{label}</label>
                 <input
                     name={name}
                     type={type}

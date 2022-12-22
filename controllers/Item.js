@@ -3,10 +3,11 @@ import db from "../config/elephantsql.js";
 
 // CRUD ITEM FOUND
 // CREATE ONE GOAL
-export const add_item =(req, res) => {
+export const add_item = (req, res) => {
+
     console.log("here test ", req.body);
-    const {name,category_id,sub_category,lat,len,found_date, user_id,note,is_lost,is_found, resolved} =req.body;
-        
+    const { name, category_id, sub_category, lat, len, found_date, user_id, note, is_lost, is_found, resolved } = req.body;
+
     db('item')
         .insert(req.body)
         .returning('*')
@@ -19,39 +20,27 @@ export const add_item =(req, res) => {
             res.status(404).json({ msg: "error" })
         })
 }
-// export const found_item = async (req,res)=>{  
-//     console.log("are we here yet? ");  
-//     try{
-//         await Item.create('item',{
-//             name:name,
-//             sub_category:{
-//                 id:sub_category,
-//                 category:{
-//                     id: category_id,
-//                     }
-//                 },
-            
-//             lat:lat,
-//             len:len,
-//             found_date:found_date,
-//             user_id:{
-//                 id:user_id
-//             },
-//             note:note,
-//             is_lost,
-//             is_found,
-//             resolved
 
-//         })
-      
-//         res.json({msg:"you did it!"})
-//     }
-//     catch(e){
-//         console.log(e);
-//         res.status(404).json({msg:'Email already exists'})
 
-//     }
-// }
+// ITEM DETAIL
+
+export const item_detail = async (req, res) => {
+    console.log("what are ou sayng", req.body);
+    const { id } = req.params;
+    console.log(id);
+    try {
+         const getItemDetail = await db('item')
+            .where({ id :id })
+            .select('*')
+         
+        res.json(getItemDetail)    
+    }
+    catch (e) {
+        console.log(e);
+        res.status(404).json({ msg: e.message })
+    }
+}
+
 
 
 
@@ -60,7 +49,7 @@ export const add_item =(req, res) => {
 const edit_item = (req, res) => {
     console.log(req.body);
     const { id } = req.params;
-    const {name,category_id,sub_category,note,height,width,weight,color_in,color_out,material,brand} =req.body;
+    const { name, category_id, sub_category, note, height, width, weight, color_in, color_out, material, brand } = req.body;
     console.log(req.body);
     db('item')
         .where({ id })
@@ -81,20 +70,21 @@ const edit_item = (req, res) => {
 
 
 export const getUserFoundItem = (req, res) => {
-    console.log("icic cest req et toi ",req.params);
-    const {user_id} = req.params
+    console.log("icic cest req et toi ", req.params);
+    const { user_id } = req.params
     db('item')
         .select('*')
-        .where({user_id: user_id, is_found:true})
+        .where({ user_id: user_id, is_found: true })
         .returning('*')
         .then(rows => {
-            if(rows.length === 0) {
-                  res.json({msg:"null"})
-            }  else{
-             
-                res.json(rows) 
+            if (rows.length === 0) {
+                res.json({ msg: "null" })
+          
+            } else {
+
+                res.json(rows)
             }
-           
+
         })
         .catch(e => {
             console.log(e);
@@ -102,17 +92,79 @@ export const getUserFoundItem = (req, res) => {
         })
 }
 
-// export const getUsers = async (req,res) =>{
-//     console.log("icic cest req et toi ",req.params);
-//     console.log("thebody",req.body);
-//     try{
-//         const users = await db('users')
-//         .leftOuterJoin('profile', 'users.id', 'profile.user_id')
-//         .select('email','password', 'id', 'profile_id')
-//         .returning('*')
-//         res.json(users)
-//     }
-//     catch(e){
-//         console.log(e);
-//         res.status(404).json({msg:'not found'})    }
-// }
+export const getUserLostItem = (req, res) => {
+    console.log("lost stuff user ", req.params);
+    const { user_id } = req.params
+    db('item')
+        .select('*')
+        .where({ user_id: user_id, is_lost: true })
+        .returning('*')
+        .then(rows => {
+            if (rows.length === 0) {
+                res.json({ msg: "null" })
+            } else {
+
+                res.json(rows)
+            }
+
+        })
+        .catch(e => {
+            console.log(e);
+            res.status(404).json({ msg: "error" })
+        })
+}
+
+// :user_id/:category_id/:sub_cat_id/:found_date/:location/'
+// Getting all the items tha are found and that are not from this user
+// checking that it's not the user items, that its not a lot item and that its not resolved 
+// WHERE: category / subCategory/ 
+export const getFoundItemPool = (req, res) => {
+    const { user_id, category_id, sub_cat_id, found_date , location} = req.params
+    console.log("icic cest req et toi ", req.params);
+    db('item')
+        .select('*')
+        .whereNot({ user_id: user_id, is_lost: true, resolved: true })
+        .where({category_id:category_id, 
+            sub_cat_id:sub_cat_id,
+            found_date:found_date,
+            location:location
+        })
+        .returning('*')
+        .then(rows => {
+            if (rows.length === 0) {
+                res.json({ msg: "null" })
+            } else {
+
+                res.json(rows)
+            }
+
+        })
+        .catch(e => {
+            console.log(e);
+            res.status(404).json({ msg: "error" })
+        })
+}
+
+export const getLostItemPool = (req, res) => {
+    console.log("lost stuff user ", req.params);
+    const { user_id } = req.params
+    db('item')
+        .select('*')
+        .whereNot({ user_id: user_id, is_found: true, resolved: true })
+        .returning('*')
+        .then(rows => {
+            if (rows.length === 0) {
+                res.json({ msg: "null" })
+                res.send("no items")
+            } else {
+
+                res.json(rows)
+            }
+
+        })
+        .catch(e => {
+            console.log(e);
+            res.status(404).json({ msg: "error" })
+        })
+}
+

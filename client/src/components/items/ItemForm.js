@@ -1,19 +1,19 @@
 import { Button } from '@mui/material';
 import React, { useContext } from 'react';
 import { FormInputLabel } from './FormInputLabel.js';
-import './FoundItemForm.css'
+import '../../css/ItemForm.css'
 import { connect } from 'react-redux';
-import MapMyContainer from './MapMyContainer.js';
+import MapMyContainer from '../additional/maps/SaveLocationMap.js';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import jwt_decode from 'jwt-decode';
 import { Navigate } from 'react-router-dom';
-import { addToLocatStorage, getFromLocalStorage } from '../helpers/storage.js';
+import { addToLocatStorage, getFromLocalStorage } from '../../helpers/storage.js';
 import Modal from 'react-bootstrap/Modal';
 
 
-class FoundItemForm extends React.Component {
+class ItemForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,6 +36,18 @@ class FoundItemForm extends React.Component {
     }
 
     componentDidMount() {
+        switch (this.props.type) {
+            case 'add_lost_item':
+                this.setState({is_lost:true})
+                break;
+            case 'add_found_item':
+                this.setState({is_found:true})
+                break;
+        }
+
+        if(this.props.type === 'add_lost_item'){
+            this.setState({is_lost:true})
+        }
         this.setState({ redirect_register: false })
         try {
             const decode = jwt_decode(this.props.token);
@@ -46,26 +58,26 @@ class FoundItemForm extends React.Component {
             console.log(e);
         }
 
-        // const get_pending_item = ()=>{
-        //     const stored_data =getFromLocalStorage('item_data_suspended',)
-        //     if(stored_data){
-        //     this.setState({
-        //         name:stored_data.name || '', 
-        //         height:stored_data.height || '', 
-        //         width:stored_data.width || '', 
-        //         weight:stored_data.weight || '', 
-        //         color_in:stored_data.color_in || '', 
-        //         color_out:stored_data.color_out || '', 
-        //         material:stored_data.material || '', 
-        //         lat:stored_data.lat || '', 
-        //         len:stored_data.len || '', 
-        //         brand:stored_data.brand || ''
-        //         })
-           
-        //     }  
+        const get_pending_item = ()=>{
+            const stored_data =getFromLocalStorage('item_data_suspended')
+            if(stored_data){
+            this.setState({
+                name:stored_data.name || '', 
+                height:stored_data.height || '', 
+                width:stored_data.width || '', 
+                weight:stored_data.weight || '', 
+                color_in:stored_data.color_in || '', 
+                color_out:stored_data.color_out || '', 
+                material:stored_data.material || '', 
+                lat:stored_data.lat || '', 
+                len:stored_data.len || '', 
+                brand:stored_data.brand || ''
+                })
+                
+            }  
 
-        // };
-        // get_pending_item()
+        };
+        get_pending_item()
 
 
 
@@ -105,7 +117,7 @@ class FoundItemForm extends React.Component {
     }
 
     saved_position = (position) => {
-        // console.log("position",position.lat, position.lng);
+   
         const lat = position.lat
         this.setState({ lat: lat });
         const lng = position.lng
@@ -120,35 +132,36 @@ class FoundItemForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.setState({ is_found: true })
 
-        const add_found_item = async () => {
-            const { name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id, is_found, found_date } = this.state;
+        const add_item = async () => {
+            const { name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id,is_lost, is_found, found_date ,resolved} = this.state;
             try {
+                console.log("the toekn", this.props.token);
                 if (!this.props.token) {
                     addToLocatStorage('item_data_suspended', this.state)
                     this.setState({ redirect_register: true })
                 }
                  else {
-                    const db_found_item = await fetch('http://localhost:3001/add_found_item', {
+                    
+                    const db_found_item = await fetch('http://localhost:3001/add_item', {
                         method: 'POST',
                         headers: {
                             'Content-type': 'application/json'
                         },
-                        body: JSON.stringify({ name, height, width, weight, color_in, lat, len, color_out, material, brand, user_id, is_found, found_date })
+                        body: JSON.stringify({ name, height, width, weight, color_in, lat, len, color_out, material, brand, user_id, is_found, is_lost, found_date, resolved})
                     });
 
-                    const data = await add_found_item.json();
-                    console.log(data);
-                    localStorage.clear();
-                    
+                    const data = await db_found_item.json();
+                    localStorage.clear();  
                 }
             }
             catch (e) {
                 console.log(e);
             }
 
-        }
+        };
+        add_item()
+        
         
     };
 
@@ -157,6 +170,7 @@ class FoundItemForm extends React.Component {
     render() {
         return (
             <>
+        
                 {
                     this.state.redirect_register === true &&
                     (<Navigate to="/register" replace={true} />)
@@ -215,5 +229,5 @@ const mapStateToProps = (state) => {
 
 
 
-export default connect(mapStateToProps, null)(FoundItemForm)
+export default connect(mapStateToProps, null)(ItemForm)
 

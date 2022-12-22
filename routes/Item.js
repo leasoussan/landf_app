@@ -1,22 +1,33 @@
 import express from "express";
 import db from "../config/elephantsql.js";
-import { add_item, getUserFoundItem } from "../controllers/Item.js";
+import { add_item, 
+    getFoundItemPool, 
+    getLostItemPool ,
+    getUserLostItem,
+    getUserFoundItem,
+    item_detail
+} from "../controllers/Item.js";
+// import CheckItemMatch from "../controllers/CheckItemMatch.js";
 const item_router = express.Router();
 
 
 // CRUD ITEMS FOUND
 // CREAT ONE GOAL
-item_router.post('/add_found_item', add_item)
+item_router.post('/add_item', add_item)
+item_router.get('/item_detail/:id', item_detail)
 
 
 
 // EDIT 
 // / Update - Put - Update/Modify a product
 item_router.put('/edit_item/:id', )
+item_router.get('/found_item_list/:user_id', getUserFoundItem)
+item_router.get('/lost_item_list/:user_id', getUserLostItem)
 
-item_router.get('/dashboard/:user_id', getUserFoundItem)
+item_router.get('/found_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getFoundItemPool)
+item_router.get('/lost_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getLostItemPool)
 
-
+// item_router.get('/search_found_item_db/:lostItem', CheckItemMatch)
 
 
 

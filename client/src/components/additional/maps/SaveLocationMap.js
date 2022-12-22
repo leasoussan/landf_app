@@ -1,8 +1,8 @@
-// import { MapContainer } from 'react-leaflet/MapContainer'
-// import { TileLayer } from 'react-leaflet/TileLayer'
-// import { useMap } from 'react-leaflet/hooks'
-import './MapMyContainer.css';
-import { MapContainer, TileLayer, useMap, Marker, Popup, useMapEvents } from 'react-leaflet';
+
+import '../../../css/MapMyContainer.css';
+import { MapContainer, TileLayer, useMap, Marker, Popup, useMapEvents, Circle} from 'react-leaflet';
+// import getRadius from 'leaflet'
+
 // import LocationMarker from './LocationMarker.js';
 import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
@@ -10,38 +10,40 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
 
-
-function MapMyContainer({saved_position}) {
-    // const position = [51.505, -0.09]
+// My App container is the Map Componenet with a Child LocationMarker
+// the Map need a location to display 
+// The location marker will give us "location "
+// this location will go up to the Parent Map
+// Map componenet is passing data position when called
+function SaveLocationMap({saved_position}) {
     const [position, setPosition] = useState(false);
+    const [areaLocator, setAreaLocator] = useState(false);
+    
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
+  
+
+    // keep a check on the position of the marker
     useEffect(()=>{
+        console.log("saved position from mapo CO");
         saved_position(position);
+
     },[position])
 
 
-
+    // here we take the props location and we set it in the state
     const found_location = (location) => {
         console.log("location", location);
         setPosition(location)
     }
 
-
-    // const located_item = (e) => {
-    //     const value = e.target.value;
-    //     setPosition(value);
-    //   }
-
-    
+    const lost_item_location = (address, prevAddress)=>{
+        setAreaLocator(address)
+    }
 
     return (
         <>
             
-               
-
                 <div id="#map" style={{ width: '35vw', height: '35vh' }}>
                     <MapContainer
                         center={{ lat: 51.505, lng: -0.09 }}
@@ -52,7 +54,7 @@ function MapMyContainer({saved_position}) {
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        {/* <MyComponent/> */}
+                      
                         <LocationMarker found_location={found_location} />
                     </MapContainer>
                 </div>
@@ -66,7 +68,7 @@ function MapMyContainer({saved_position}) {
         </>
     )
 }
-
+export default SaveLocationMap
 
 
 
@@ -80,22 +82,14 @@ export const LocationMarker = ({ found_location }) => {
             found_location(e.latlng)
             map.flyTo(e.latlng, map.getZoom())
         },
-
+        
     })
 
-    return position === null ? null : (
+    console.log("we are here")
+    return position === null ? 'There is No Position' : (
         <Marker position={position}>
             <Popup>Item Found</Popup>
         </Marker>
     )
 
 }
-
-
-
-export default MapMyContainer
-
-
-
-
-

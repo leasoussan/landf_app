@@ -138,7 +138,7 @@ export const login = async (req, res) => {
 
         const token = jwt.sign({userId, email, first_name}, process.env.ACCESS_TOKEN_SECRET,{
             expiresIn :jwtExpirySeconds
-        });
+                });
         
         res.cookie('accessToken', token,{
             httpOnly:true,

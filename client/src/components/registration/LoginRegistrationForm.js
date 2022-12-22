@@ -4,9 +4,9 @@ import axios from 'axios';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { AppContext } from '../App.js';
+import { AppContext } from '../../App.js';
 import { connect } from 'react-redux';
-import { get_token } from '../redux/actions.js';
+import { get_token } from '../../redux/actions.js';
 
 const LoginRegistrationForm = (props) => {
 
@@ -21,6 +21,7 @@ const LoginRegistrationForm = (props) => {
     const navigate= useNavigate()
   
     const handleClick = async () => {
+        console.log("click button check props", props.title);
         if(props.title === 'Login'){
             try{
                 const response = await axios.post('/login',{
@@ -30,8 +31,9 @@ const LoginRegistrationForm = (props) => {
                         'Content-type': 'application/json'
                     }
                 })
+                console.log("line 34 here ", response.data.token);
                 setToken(response.data.token);
-                this.props.get_token(response.data.token) 
+                props.get_token(response.data.token) 
                 navigate('/')
             } catch(e){
                 setMsg(e.msg)

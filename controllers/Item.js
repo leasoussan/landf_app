@@ -46,23 +46,27 @@ export const item_detail = async (req, res) => {
 
 // EDIT ITEM
 // / Update - Put - Update/Modify a product
-const edit_item = (req, res) => {
-    console.log(req.body);
+export const edit_item = async (req, res) => {
     const { id } = req.params;
     const { name, category_id, sub_category, note, height, width, weight, color_in, color_out, material, brand } = req.body;
-    console.log(req.body);
-    db('item')
-        .where({ id })
-        .update(req.body)
-        .returning('*')
-        .then(rows => {
-            res.json(rows)
-        })
-        .catch(e => {
-            console.log(e);
-            res.status(404).json({ msg: e.messgae })
-        })
+    console.log("req.body", req.body);
+    console.log("req.params", req.params);
 
+    try{
+        console.log(req.body);
+       const get_item = await  db('item')
+            .where({ id })
+            .update(req.body)
+            .returning('*')
+            .then(rows => {
+                res.json(rows)
+            })
+        console.log(get_item);
+    }
+    catch(e){
+        console.log(e);
+        res.status(404).json({ msg: e.message })
+    }
 
 }
 

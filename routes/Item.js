@@ -5,7 +5,8 @@ import { add_item,
     getLostItemPool ,
     getUserLostItem,
     getUserFoundItem,
-    item_detail
+    item_detail, 
+    edit_item
 } from "../controllers/Item.js";
 // import CheckItemMatch from "../controllers/CheckItemMatch.js";
 const item_router = express.Router();
@@ -20,7 +21,7 @@ item_router.get('/item_detail/:id', item_detail)
 
 // EDIT 
 // / Update - Put - Update/Modify a product
-item_router.put('/edit_item/:id', )
+item_router.put('/edit_item/:id', edit_item)
 item_router.get('/found_item_list/:user_id', getUserFoundItem)
 item_router.get('/lost_item_list/:user_id', getUserLostItem)
 

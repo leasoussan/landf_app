@@ -18,6 +18,7 @@ class ItemForm extends React.Component {
         super(props);
         this.state = {
             name: '',
+            item_data:[],
             category_select: '',
             categories: [],
             sub_category: [],
@@ -31,36 +32,20 @@ class ItemForm extends React.Component {
             is_lost: false,
             is_found: false,
             resolved: false,
-            redirect_register: false
+            redirect_register: false,
         }
     }
 
     componentDidMount() {
-        switch (this.props.type) {
-            case 'add_lost_item':
-                this.setState({is_lost:true})
-                break;
-            case 'add_found_item':
-                this.setState({is_found:true})
-                break;
-        }
-
-        if(this.props.type === 'add_lost_item'){
-            this.setState({is_lost:true})
-        }
-        this.setState({ redirect_register: false })
-        try {
-            const decode = jwt_decode(this.props.token);
-            const getUserId = decode.userId
-            this.setState({ user_id: getUserId })
-        }
-        catch (e) {
-            console.log(e);
-        }
-
-        const get_pending_item = ()=>{
-            const stored_data =getFromLocalStorage('item_data_suspended')
-            if(stored_data){
+        const set_retrieved_item_data = ()=>{
+            const check_data_type =()=>{
+                const retreive = getFromLocalStorage('item_data_suspended')
+                const edit = this.props.item_data
+                return retreive ? retreive : edit
+            }
+        const stored_data = check_data_type()
+        // console.log(stored_data);
+        if(stored_data){
             this.setState({
                 name:stored_data.name || '', 
                 height:stored_data.height || '', 
@@ -72,15 +57,46 @@ class ItemForm extends React.Component {
                 lat:stored_data.lat || '', 
                 len:stored_data.len || '', 
                 brand:stored_data.brand || ''
-                })
-                
-            }  
-
-        };
-        get_pending_item()
+                })     
+                }  
+        }
+        
 
 
+        switch (this.props.type) {
+            case 'add_lost_item':
+                this.setState({is_lost:true})
+                break;
+            case 'add_found_item':
+                this.setState({is_found:true})
+                break;
+            case 'edit_item':
+                this.setState({item_data:[this.props.item_data]})
+                console.log("im tryoing in here");
+                set_retrieved_item_data(this.item_data)
+                break;
+            case 'get_pending_item':
+                console.log("im in the pending toda", );
+                set_retrieved_item_data(getFromLocalStorage('item_data_suspended'))
+                break;
+        }
+    
+        this.setState({ redirect_register: false })
+        
+        const get_token= async()=>{
+        try {
+            const decode = jwt_decode(this.props.token);
+            const getUserId = decode.userId
+            this.setState({ user_id: getUserId })
+        }
+        catch (e) {
+            console.log(e);
+        }
+        }
+        ;get_token()
 
+
+    
         const getCategories = async () => {
             try {
                 const res = await fetch('/category', {
@@ -94,7 +110,11 @@ class ItemForm extends React.Component {
             }
         };
         getCategories();
-    }
+
+     };
+    
+        
+
 
 
     handleInputChange = (e) => {
@@ -134,6 +154,7 @@ class ItemForm extends React.Component {
         e.preventDefault();
 
         const add_item = async () => {
+            const {edit_item_id} = this.props.item_id 
             const { name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id,is_lost, is_found, found_date ,resolved} = this.state;
             try {
                 console.log("the toekn", this.props.token);
@@ -142,9 +163,18 @@ class ItemForm extends React.Component {
                     this.setState({ redirect_register: true })
                 }
                  else {
+                    const check_saving_type = ()=>{
+                        if(this.props.type === 'edit_item'){
+                            console.log("this is an edit save");
+                            const [edit_item_url, method] = [`http://localhost:3001/edit_item/:${edit_item_id}`, 'PUT']
+                        }else{
+                            const [url, method] =[ 'http://localhost:3001/add_item', 'POST'];
+                        }
+                    }; 
+                   
                     
-                    const db_found_item = await fetch('http://localhost:3001/add_item', {
-                        method: 'POST',
+                    const db_found_item = await fetch(url, {
+                        method: method,
                         headers: {
                             'Content-type': 'application/json'
                         },
@@ -175,17 +205,18 @@ class ItemForm extends React.Component {
                     this.state.redirect_register === true &&
                     (<Navigate to="/register" replace={true} />)
                 }
+
                 <form className='add_item_form' onSubmit={this.handleSubmit} >
 
                     <Col xs={10} md={7} lg={7} className='form_layout'>
 
-                        <FormInputLabel name='name' value={this.state.name} label='Item Name' type='text' onChange={this.handleInputChange} />
+                        <FormInputLabel name='name' value={this.state.name || ''} label='Item Name' type='text' onChange={this.handleInputChange} />
 
                         <label> Select Category</label>
                         <select name='category_select' className='input_conatainer' onChange={this.handleSelectChange}>
                             {this.state.categories.map((item, index) => {
                                 return (
-                                    <option key={index} value={item.cat_id} >{item.name}</option>
+                                    <option key={index} value={item.cat_id || ''} >{item.name}</option>
                                 )
                             })}
                         </select>
@@ -193,24 +224,24 @@ class ItemForm extends React.Component {
                         <select name='sub_cat_select' className='input_conatainer' onChange={this.handleSubCatChange}>
                             {this.state.sub_category.map((item, index) => {
                                 return (
-                                    <option key={index} value={item.name} >{item.name}</option>
+                                    <option key={index} value={item.name ||''} >{item.name}</option>
                                 )
                             })}
                         </select>
-                        <FormInputLabel name='height' label='Height ' value={this.state.height} type='number' onChange={this.handleInputChange} />
-                        <FormInputLabel name='width' label='Width ' value={this.state.width} type='number' onChange={this.handleInputChange} />
-                        <FormInputLabel name='weight' label='Weight' value={this.state.weight} type='number' onChange={this.handleInputChange} />
-                        <FormInputLabel name='color_in' label='Color Inside' value={this.state.color_in} type='text' onChange={this.handleInputChange} />
-                        <FormInputLabel name='color_out' label='Color Outside' value={this.state.color_out} type='text' onChange={this.handleInputChange} />
-                        <FormInputLabel name='material' label='Material ' type='text'value={this.state.material} onChange={this.handleInputChange} />
-                        <FormInputLabel name='brand' label='Brand' type='text' value={this.state.brand} onChange={this.handleInputChange} />
-                        <FormInputLabel name='note' label='Additionals Notes' value={this.state.note} type='text' onChange={this.handleInputChange} />
+                        <FormInputLabel name='height' label='Height ' value={this.state.height || ''} type='number' onChange={this.handleInputChange} />
+                        <FormInputLabel name='width' label='Width ' value={this.state.width || ''} type='number' onChange={this.handleInputChange} />
+                        <FormInputLabel name='weight' label='Weight' value={this.state.weight || ''} type='number' onChange={this.handleInputChange} />
+                        <FormInputLabel name='color_in' label='Color Inside' value={this.state.color_in || ''} type='text' onChange={this.handleInputChange} />
+                        <FormInputLabel name='color_out' label='Color Outside' value={this.state.color_out || ''} type='text' onChange={this.handleInputChange} />
+                        <FormInputLabel name='material' label='Material ' type='text'value={this.state.material || ''} onChange={this.handleInputChange} />
+                        <FormInputLabel name='brand' label='Brand' type='text' value={this.state.brand || ''} onChange={this.handleInputChange} />
+                        <FormInputLabel name='note' label='Additionals Notes' value={this.state.note || ''} type='text' onChange={this.handleInputChange} />
                     </Col>
 
                     <Col sm={10} md={5} lg={5} >
                         <MapMyContainer saved_position={this.saved_position} />
                     </Col> 
-                    <Button type='submit' >ADD ITEM </Button>
+                    <Button type='submit' >{this.props.type === 'edit_item' ? 'Save Changes' : 'Save'}</Button>
                 </form>
             </>
         )

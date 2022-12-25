@@ -5,29 +5,51 @@ class CheckItemMatch extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            lost_item_id:'',
-            found_item_id:'',
-            lostItem_match_foundItem :[],
-           foundItem_match_lostItem:[],
-           match: false
+            item_details:[],
+            type:'',
+            lost_item_pool :[],
+           found_item_pool:[],
+           match: false, 
+
         }
     }
     // item_router.get('/found_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getFoundItemPool)
 
     componentDidMount(){
-        console.log(this.props.user_found_items);
-        //    const item_type_check = 
+        console.log(this.props);
+        const get_comparative_db =()=>{
+            const type = this.props.type
+            switch (type) {
+                case 'lost':
+                    this.setState({type:type})  ;
+                    this.setState({item_details:this.props.item_data})
+                    this.setState({found_item_pool:this.props.user_found_items})
+                    break;
+                case 'found':
+                    this.setState({type:type})  ;
+                    this.setState({item_details:this.props.item_data})
+                    this.setState({lost_item_pool:this.props.user_lost_items})
+                break;
+        
+                default:
+                break;
+            }
+          
+        };
+        get_comparative_db()
 
+
+       
     }
 
-
-
+    
 
 
 
 
 
     render(){
+        console.log(this.state)
         return(
             <>
             {

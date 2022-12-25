@@ -8,7 +8,7 @@ import { Link ,Routes, Route, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import ItemDetail from "./items/ItemDetail.js";
 import { user_foundList_toStore , user_lostList_toStore} from "../redux/actions.js";
-
+import CheckItemMatch from "./items/CheckItemMatch.js";
 
 
 const Dashboard = (props) => {
@@ -24,7 +24,7 @@ const Dashboard = (props) => {
 
 
     useEffect(() => {
-        console.log(this.props);
+        console.log(props);
     
         const getUserFoundList = async () => {
             const get_token = await jwt_decode(token)
@@ -49,7 +49,8 @@ const Dashboard = (props) => {
                         const response = await fetch(`http://localhost:3001/lost_item_list/${user_id}`,)
                         const data = await response.json()
                         setLostList(data);
-                        props.lostList_toLocal(lostList)
+                        // props.dispatch(user_foundList_toStore(data))
+                        props.lostList_toLocal(data)
                     }
                     catch(e){
                         console.log(e);
@@ -91,7 +92,8 @@ const Dashboard = (props) => {
                                             <p className="text-sm text-gray-500">Is Lost: {item.is_found ? "Yes I found it:) waiting for you " : "this item is in the wrong place"}</p>
                                            
                                             <ItemDetail item_id={item.id}/>
-                                            
+                                       
+                                            <CheckItemMatch item_data={item} type={item.is_found ? 'found' : 'lost'}/>
                                         </div>
                                     </li>
                                 </div>
@@ -122,6 +124,7 @@ const Dashboard = (props) => {
                                             
                                         </li>
                                         <ItemDetail item_id={item.id}/>
+                                        <CheckItemMatch item_data={item} type={item.is_lost ? 'lost' : 'found'}/>
                                         </div>
                                     )
 

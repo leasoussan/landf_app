@@ -20,10 +20,10 @@ export const reducer = (state = initState, action = {}) => {
             return { ...state, add_item_load: action.payload }
        
         case USER_FOUND_LIST:
-            return { ...state, list: action.payload }
+            return { ...state, user_found_items: action.payload }
         
         case USER_LOST_LIST:
-            return { ...state, list: action.payload }
+            return { ...state, user_lost_items: action.payload }
 
         default:
             return { ...state }

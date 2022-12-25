@@ -26,8 +26,7 @@ class ItemDetail extends Component {
   }
 
   componentDidMount() {
-    console.log("hola");
-    console.log(this.props);
+  
     this.setState({item_id: this.props.id})
     this.setState({ type: 'display_item' })
     const getItemDetail = async () => {
@@ -71,7 +70,7 @@ class ItemDetail extends Component {
     const type = this.state.type
     return (
       <>
-          <CheckItemMatch id={this.state.item_data}/>
+   
         <Button key={this.props.item_id} className="me-2 mb-2" onClick={() => this.setState({ show: true })}>
           Detail
         </Button>

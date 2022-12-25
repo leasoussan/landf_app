@@ -19,6 +19,8 @@ export const get_stored_add_item_data =(data)=>{
 }
 
 export const user_foundList_toStore =(list)=>{
+    console.log("FOUND LIST FROM ACTION", list);
+
     return{
         type:USER_FOUND_LIST,
         payload:list
@@ -26,6 +28,7 @@ export const user_foundList_toStore =(list)=>{
 }
 
 export const user_lostList_toStore =(list)=>{
+    console.log("LOST LIST FROM ACTION", list);
     return{
         type:USER_LOST_LIST,
         payload:list

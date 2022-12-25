@@ -18,10 +18,7 @@ import Modal from 'react-bootstrap/Modal';
 function SaveLocationMap({saved_position}) {
     const [position, setPosition] = useState(false);
     const [areaLocator, setAreaLocator] = useState(false);
-    
     const [show, setShow] = useState(false);
-
-  
 
     // keep a check on the position of the marker
     useEffect(()=>{

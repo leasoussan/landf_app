@@ -47,21 +47,23 @@ export const item_detail = async (req, res) => {
 // EDIT ITEM
 // / Update - Put - Update/Modify a product
 export const edit_item = async (req, res) => {
+    console.log("HIIII***********************", req.params);
+
     const { id } = req.params;
     const { name, category_id, sub_category, note, height, width, weight, color_in, color_out, material, brand } = req.body;
     console.log("req.body", req.body);
     console.log("req.params", req.params);
 
     try{
-        console.log(req.body);
+        console.log("hou hou *************************", req.params);
        const get_item = await  db('item')
-            .where({ id })
+            .where({ id :id })
             .update(req.body)
             .returning('*')
             .then(rows => {
                 res.json(rows)
             })
-        console.log(get_item);
+        console.log("______________________________get item ",get_item);
     }
     catch(e){
         console.log(e);
@@ -70,7 +72,22 @@ export const edit_item = async (req, res) => {
 
 }
 
+export const delet = (req, res) => {
 
+    const { id } = req.params;
+    db('item')
+        .where({ id:id })
+        .del()
+        .returning('*')
+        .then(rows => {
+            res.json(rows)
+            console.log(rows);
+        })
+        .catch(e => {
+            res.status(404).json({ msg: 'product not found...' })
+        })
+
+}
 
 
 export const getUserFoundItem = (req, res) => {

@@ -12,7 +12,6 @@ const Nav = (props) => {
     const [navuser_id, setUserId] = useState(false)
     const { token, setToken } = useContext(AppContext)
 
-    // console.log(token);
     const navigate = useNavigate()
 
     useEffect(()=>{

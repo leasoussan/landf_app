@@ -7,8 +7,11 @@ import '../css/Dashboard.css'
 import { Link ,Routes, Route, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import ItemDetail from "./items/ItemDetail.js";
+import { user_foundList_toStore , user_lostList_toStore} from "../redux/actions.js";
 
-const Dashboard = ({navigation}) => {
+
+
+const Dashboard = (props) => {
     const [userId, setUserId] = useState('')
     const [foundList, setFoundList] = useState('')
     const [lostList, setLostList] = useState('')
@@ -17,23 +20,23 @@ const Dashboard = ({navigation}) => {
     const [show, setShow] = useState(false);
 
     // i nened to check toekn if use effete with try and cathc to avoid breaking -error
-
     const navigate = useNavigate();
 
 
     useEffect(() => {
+        console.log(this.props);
+    
         const getUserFoundList = async () => {
             const get_token = await jwt_decode(token)
             const user_id = await get_token.userId
-            console.log("checking you ", user_id);
             setUserId(user_id)
             try {
                 const get_found_list = async () => {
                     try{
                     const response = await fetch(`http://localhost:3001/found_item_list/${user_id}`,)
                     const data = await response.json()
-                    console.log("data fromfound list", data);
-                    setFoundList(data)
+                    setFoundList(data);
+                    props.foundList_toLocal(data)
                     }
                     catch(e){
                         console.log(e);
@@ -45,8 +48,8 @@ const Dashboard = ({navigation}) => {
                     try{
                         const response = await fetch(`http://localhost:3001/lost_item_list/${user_id}`,)
                         const data = await response.json()
-                        console.log("data from Lost list", data);
-                        setLostList(data)
+                        setLostList(data);
+                        props.lostList_toLocal(lostList)
                     }
                     catch(e){
                         console.log(e);
@@ -63,14 +66,7 @@ const Dashboard = ({navigation}) => {
         getUserFoundList()
     }, [])
 
-
-    const handleClickToItemDetail=(e)=>{
-        const item_id = e.target.value;
-        
-        navigate(`/item_detail/${e.target.value}`, {item_id});
-    }
-
-
+ 
 
     return (
         <div className="dashboard_display">
@@ -147,6 +143,16 @@ const Dashboard = ({navigation}) => {
 const mapStateToProps = (state, ownProps) => {
     return {
         token: state.token,
+
     }
 }
-export default connect(mapStateToProps)(Dashboard)
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        
+        foundList_toLocal : (list)=> dispatch(user_foundList_toStore(list)),
+        lostList_toLocal : (list)=> dispatch(user_lostList_toStore(list))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Dashboard)

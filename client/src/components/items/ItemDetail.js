@@ -5,6 +5,9 @@ import Modal from 'react-bootstrap/Modal';
 import MapMyContainer, { LocationMarker, SetLocationMarker, } from '../additional/maps/SaveLocationMap.js';
 import { DisplaySavedLocation } from '../additional/maps/DisplaySavedLocation.js';
 import ItemForm from './ItemForm.js';
+import { Link } from 'react-router-dom';
+import CheckItemMatch from './CheckItemMatch.js';
+
 
 class ItemDetail extends Component {
   constructor(props) {
@@ -23,16 +26,15 @@ class ItemDetail extends Component {
   }
 
   componentDidMount() {
+    console.log("hola");
+    console.log(this.props);
+    this.setState({item_id: this.props.id})
     this.setState({ type: 'display_item' })
     const getItemDetail = async () => {
       try {
         const response = await fetch(`http://localhost:3001/item_detail/${this.props.item_id}`);
         const data = await response.json();
-        // const item = Object.entries(data[0]);
         const item = data[0];
-
-        //  const item = data[0].map((item,i )=> (item,i));
-
         this.setState({ item_data: item });
         const lat = item.lat;
         const lng = item.len;
@@ -47,19 +49,29 @@ class ItemDetail extends Component {
 
 
   handleEditItem = (e) => {
-    console.log("hihih im here", e);
     this.setState({ type: 'edit_item' })
-
   }
 
+  
+  handleDelete = (e) => {
+    fetch(`http://localhost:3001/delete_item/${e.target.value}`, {
+        method: 'DELETE'
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            alert("item Deleted ")
+        })
+        .catch(e => console.log(e))
+}
 
   render() {
+
     const itemData = Object.entries(this.state.item_data)
     const type = this.state.type
     return (
       <>
-
-
+          <CheckItemMatch id={this.state.item_data}/>
         <Button key={this.props.item_id} className="me-2 mb-2" onClick={() => this.setState({ show: true })}>
           Detail
         </Button>
@@ -84,6 +96,7 @@ class ItemDetail extends Component {
                   </div>
                   <DisplaySavedLocation found_saved_location={this.state.location} />
                   <button onClick={this.handleEditItem}>EDIT ITEM</button>
+                  <button onClick={this.handleDelete} value={this.state.item_data.id}>DELET</button>
                 </div>
               </>
               :

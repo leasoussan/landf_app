@@ -6,7 +6,8 @@ import { add_item,
     getUserLostItem,
     getUserFoundItem,
     item_detail, 
-    edit_item
+    edit_item,
+    delet
 } from "../controllers/Item.js";
 // import CheckItemMatch from "../controllers/CheckItemMatch.js";
 const item_router = express.Router();
@@ -16,6 +17,7 @@ const item_router = express.Router();
 // CREAT ONE GOAL
 item_router.post('/add_item', add_item)
 item_router.get('/item_detail/:id', item_detail)
+item_router.delete('/delete_item/:id', delet)
 
 
 
@@ -24,8 +26,8 @@ item_router.get('/item_detail/:id', item_detail)
 item_router.put('/edit_item/:id', edit_item)
 item_router.get('/found_item_list/:user_id', getUserFoundItem)
 item_router.get('/lost_item_list/:user_id', getUserLostItem)
-
 item_router.get('/found_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getFoundItemPool)
+
 item_router.get('/lost_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getLostItemPool)
 
 // item_router.get('/search_found_item_db/:lostItem', CheckItemMatch)

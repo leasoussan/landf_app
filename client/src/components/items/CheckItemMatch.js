@@ -1,20 +1,27 @@
-
-
+import React from "react";
+import { connect } from "react-redux";
 
 class CheckItemMatch extends React.Component{
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state={
-            lost_item:'',
-            found_item:'',
+            lost_item_id:'',
+            found_item_id:'',
+            lostItem_match_foundItem :[],
+           foundItem_match_lostItem:[],
+           match: false
         }
     }
+    // item_router.get('/found_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getFoundItemPool)
 
     componentDidMount(){
-        console.log("this.state item match ",this.state);
-        console.log("this.porps item match ",this.props);
+        console.log(this.props.user_found_items);
+        //    const item_type_check = 
 
     }
+
+
+
 
 
 
@@ -23,12 +30,35 @@ class CheckItemMatch extends React.Component{
     render(){
         return(
             <>
+            {
+                this.state.match ?
+                <h1>WE MATCH</h1>
+                :
+                <h1>no</h1>
+            }
+           
             </>
         )
     }
 }
+const mapStateToProps = (state, ownProps) => {
+    return {
+        store_token: state.token,
+        user_found_items: state.user_found_items,
+        user_lost_items:  state.user_lost_items,
+    }
+}
 
-export default CheckItemMatch
+const mapDispatchToProps = (dispatch) => {
+    return {
+        // user_found_items : ()=>{ dispatch(userFitem())} 
+        // user_lost_items :
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckItemMatch)
+
+
 
 // // const checkNotesWords = (notes) => {
 // //     const spliter = notes.split(',');
@@ -72,4 +102,3 @@ export default CheckItemMatch
     // };
     // getFoundItemsGlobal()
 
-}

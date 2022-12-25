@@ -20,7 +20,7 @@ export const DisplaySavedLocation = ({found_saved_location} ) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-                    <MultipleMarkerDisplay/>
+            <MultipleMarkerDisplay/>
 
           <Marker position={position}>
             <Popup>

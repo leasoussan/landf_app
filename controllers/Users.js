@@ -123,7 +123,7 @@ export const createProfile = async(req, res) => {
 
 export const login = async (req, res) => {
     const { email, password} = req.body;
-    const jwtExpirySeconds = 600
+    // const jwtExpirySeconds = 600
     try{
         const user = await db('users')
         .leftOuterJoin('profile', 'users.id', 'profile.user_id')
@@ -137,12 +137,12 @@ export const login = async (req, res) => {
         const first_name = user[0].first_name;
 
         const token = jwt.sign({userId, email, first_name}, process.env.ACCESS_TOKEN_SECRET,{
-            expiresIn :jwtExpirySeconds
+            expiresIn :'30m'
                 });
         
         res.cookie('accessToken', token,{
             httpOnly:true,
-            maxAge: jwtExpirySeconds * 1000
+            maxAge: 30*60 * 1000
         });
         res.json({token:token});
 
@@ -172,19 +172,19 @@ export const logout = (req, res) => {
 
 
 export const token = (req,res) => {
-  const jwtExpirySeconds = 600
+//   const jwtExpirySeconds = 600
   const accessToken = req.cookies.accessToken || req.headers['x-access-token'];
 
   const decode = jwt_decode(accessToken);
   console.log("ya here ", decode.userId, decode.email, decode.first_name);
 
   const token = jwt.sign({userId:decode.userId,email:decode.email}, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn:jwtExpirySeconds,
+    expiresIn:'30m',
   });
 
   res.cookie('accessToken',token, {
     httpOnly: true,
-    maxAge: jwtExpirySeconds * 1000  
+    maxAge: 30*60 * 1000  
   });
 
   res.status(200).json({token:accessToken})

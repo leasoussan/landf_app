@@ -6,16 +6,20 @@ import { useContext, useState, useEffect } from 'react';
 import jwt_decode from 'jwt-decode';
 import { navigate, useNavigate } from 'react-router-dom';
 import ItemForm from './items/ItemForm';
-import { AppContext } from '../App';
+import { AuthContext  } from '../auth/AuthProvider.js';
 import { connect } from 'react-redux';
 import { getFromLocalStorage } from "../helpers/storage.js";
 import axios from 'axios';
 import { get_token } from '../redux/actions.js';
 
+import {useAuth} from '../auth/AuthProvider.js'
+
 const Home = (props) => {
-    const [redirect, setRedirect] = useState(false)
-    const {token, setToken} = useContext(AppContext)
-    const [userId, setUserId] = useState('');
+    const [redirect, setRedirect] = useState(false);
+    const {token, setToken} = useAuth()
+    // const {conTest} = useAuth()
+    console.log("token",token);
+
     const [type, setType] = useState('');
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -25,14 +29,14 @@ const Home = (props) => {
     useEffect(() => {
         const verify = async () => {
             try {
-                console.log(token);
-                // const get_token = jwt_decode(token)
-                // console.log(get_token);
-                // if(response){
-                //     // setToken(response.data.token)
-                //     check_data_exisit()
-                //     setRedirect(true)
-                // }
+                console.log("step1",token);
+                const get_token = jwt_decode(token)
+                console.log("step2",get_token);
+                if(get_token){
+                    setToken(get_token.data.token)
+                    check_data_exisit()
+                    setRedirect(true)
+                }
               
             } catch (e) {
                 // setToken(null)
@@ -81,9 +85,9 @@ const Home = (props) => {
 
             <div>
                 <h1>Home</h1>
-
+                {/* token &&  */}
                 {
-                   token && type === 'get_pending_item' ?
+                   type === 'get_pending_item' ?
 
 
                         <div>

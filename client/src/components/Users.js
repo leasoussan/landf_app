@@ -9,6 +9,7 @@ const navigate = useNavigate()
     useEffect (()=>{
         fetch('/users')
         .then(res => {
+            console.log("res.status",res.status);
             if(res.status === 200){
                 return res.json()
             }
@@ -28,16 +29,16 @@ const navigate = useNavigate()
 
     return(
         <div>
-
-        {
+                <h1> This is a pgae that I want to protect later</h1>
+        {/* {
             users ? users.map(item=>{
                 return(
                     <div key={item.id}>
                         {item.id} : {item.email}
                     </div>
                 )
-            }) : 'Unauthorized'
-        }
+            }) : 'No users yet'
+        } */}
 
         </div>
     )

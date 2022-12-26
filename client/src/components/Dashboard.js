@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react"
 import { connect } from "react-redux";
-import { AppContext } from '../App';
+import { AuthContext  } from '../auth/AuthProvider.js';
 import jwt_decode from 'jwt-decode';
 import Users from "./Users";
 import '../css/Dashboard.css'
@@ -15,7 +15,7 @@ const Dashboard = (props) => {
     const [foundList, setFoundList] = useState('')
     const [lostList, setLostList] = useState('')
     const [redirect, setRedirect] = useState(false)
-    const { token, setToken } = useContext(AppContext)
+    const { token, setToken } = useContext(AuthContext )
     const [show, setShow] = useState(false);
    
 
@@ -24,11 +24,29 @@ const Dashboard = (props) => {
 
 
     useEffect(() => {
+        console.log("this is a sign");
+        try{
+            const decode = jwt_decode(token);
+            const expire = decode.exp;
+            if(expire * 1000 < new Date().getTime()){
+              setToken(null);
+              navigate('/login')
+            }
+          }
+          catch(e){
+            // console.log(e);
+            // setToken(null);
+            navigate('/login')
+          }
+       
+      
 
         const getUserFoundList = async () => {
-            const get_token = await jwt_decode(token)
-            const user_id = await get_token.userId
-            setUserId(user_id)
+            console.log(this.props);
+            // // const get_token = await jwt_decode(token)
+            // const user_id = await get_token.userId
+            // setUserId(user_id)
+            const user_id = 6
             try {
                 const get_found_list = async () => {
                     try {
@@ -168,7 +186,7 @@ const Dashboard = (props) => {
 
 
 const mapStateToProps = (state, ownProps) => {
-    console.log(state);
+
     return {
         token: state.token,
 

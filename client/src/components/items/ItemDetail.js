@@ -7,7 +7,9 @@ import { DisplaySavedLocation } from '../additional/maps/DisplaySavedLocation.js
 import ItemForm from './ItemForm.js';
 import { Link } from 'react-router-dom';
 import CheckItemMatch from './CheckItemMatch.js';
-import { UserFoundMatchSuggestion } from '../additional/suggestions/UserFoundSuggestions.js';
+import UserFoundMatchSuggestion from '../additional/suggestions/UserFoundSuggestions.js';
+import '../../css/Suggestion.css'
+
 
 class ItemDetail extends Component {
   constructor(props) {
@@ -99,8 +101,8 @@ class ItemDetail extends Component {
                   <button onClick={this.handleDelete} value={this.state.item_data.id}>DELET</button>
                 </div>
                 </div>
-                asfsdf
-                <userFoundMatchSuggestion/>
+                
+                <UserFoundMatchSuggestion/>
                 <div>
  
                 </div>

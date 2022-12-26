@@ -9,6 +9,7 @@ export const Auth = (props) => {
     const navigate = useNavigate()
 
     useEffect(()=>{
+        
         const verify = async() => {
             try{
                 const response = await axios.get('/token')

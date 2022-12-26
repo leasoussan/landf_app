@@ -140,22 +140,25 @@ export const getUserLostItem = (req, res) => {
 // checking that it's not the user items, that its not a lot item and that its not resolved 
 // WHERE: category / subCategory/ 
 export const getFoundItemPool = (req, res) => {
-    const { user_id, category_id, sub_cat_id, found_date , location} = req.params
+    // const { user_id, category_id, sub_cat_id, found_date , location} = req.params
+    // console.log();
+    const { user_id, category_id, sub_category} = req.params
     console.log("icic cest req et toi ", req.params);
     db('item')
         .select('*')
-        .whereNot({ user_id: user_id, is_lost: true, resolved: true })
-        .where({category_id:category_id, 
-            sub_cat_id:sub_cat_id,
-            found_date:found_date,
-            location:location
-        })
+        .whereNot({ user_id: user_id, is_lost: true})
+        // , resolved: true 
+        .where({category_id:category_id,
+        sub_category:sub_category,
+            // found_date:found_date,
+            // location:location
+        }
+        )
         .returning('*')
         .then(rows => {
             if (rows.length === 0) {
                 res.json({ msg: "null" })
             } else {
-
                 res.json(rows)
             }
 

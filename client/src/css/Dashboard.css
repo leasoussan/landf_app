@@ -19,4 +19,18 @@
     border: solid 4px purple;
     width: 50%;
     overflow-y:scroll;
+    margin: 3rem;
+}
+
+
+
+
+.item_display_clicked{
+   width: 80%;
+   border: solid green 4px;
+   background-color: rgb(163, 197, 181);
+}
+
+.img_item_dashboard{
+
 }

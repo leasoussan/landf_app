@@ -41,10 +41,13 @@ class ItemForm extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         this.setState({ redirect_register: false })
         const get_token = async () => {
             try {
+                const token  = this.props.token
                 const decode = jwt_decode(this.props.token);
+                console.log(decode);
                 const getUserId = decode.userId
                 this.setState({ user_id: getUserId })
             }
@@ -71,10 +74,12 @@ class ItemForm extends React.Component {
         getCategories();
 
         const set_retrieved_item_data = () => {
+
             const check_data_type = () => {
-                const retreive = getFromLocalStorage('item_data_suspended')
+                const retreive = getFromLocalStorage('pending_data')
+                console.log("retreive", retreive);
                 const edit = this.props.item_data
-    
+
                 return retreive ? retreive : edit
             }
             const stored_data = check_data_type()
@@ -107,21 +112,29 @@ class ItemForm extends React.Component {
 
 
         switch (this.props.type) {
+
             case 'add_lost_item':
+                console.log("in the LOST", this.props.type);
+
                 this.setState({ is_lost: true })
                 break;
             case 'add_found_item':
-                console.log("thisis found");
+                console.log("in the ADD FOUND", this.props.type);
+
                 this.setState({ is_found: true })
                 break;
             case 'edit_item':
-                 set_retrieved_item_data(this.item_data);
-                if(this.props.item_data.is_lost === true){
+                console.log("in the EDIT", this.props.type);
+                // this.setState({user_id:this.props.})
+                set_retrieved_item_data(this.item_data);
+                if (this.props.item_data.is_lost === true) {
                 }
-
                 break;
             case 'get_pending_item':
-                set_retrieved_item_data(getFromLocalStorage('item_data_suspended'))
+                // const user_id = jwt_decode(token)
+                // console.log(this.state.user_id);
+                set_retrieved_item_data(getFromLocalStorage('pending_data'))
+                
                 break;
         }
 
@@ -153,7 +166,7 @@ class ItemForm extends React.Component {
 
     handleSelectChange = async (e) => {
         try {
-            this.setState({ category_select: e })
+            this.setState({ category_select: e.target.value })
             const res = await fetch(`http://localhost:3001/sub_cat/${e.target.value}`);
             const data = await res.json()
             this.setState({ sub_category: data })
@@ -179,68 +192,79 @@ class ItemForm extends React.Component {
     }
 
 
+
+
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
-        const add_item = async () => {
-            try {
-                // console.log("the toekn", this.props.token);
-                //     if (!this.props.token) {
-                //         addToLocatStorage('item_data_suspended', this.state)
-                //         this.setState({ redirect_register: true })
-                //     }
-                //      else {
-                // const { item_id } = this.state.item_id
-    
-                const {id, name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id, is_lost, is_found, found_date, resolved, category_select, sub_cat_select } = this.state;
-                console.log(id);
-                console.log("before save");
-                if(this.props.type === 'edit_item'){
-                    const id = this.state.item_id
+        console.log("check token ", this.props.token);
+        if (!this.props.token) {
+            const pre_save_check = async () => {
+                try{
                     console.log(this.state);
+               
+                    addToLocatStorage('pending_data', (this.state))
+                    this.setState({ redirect_register: true })
+                }
+                catch(e){
+                    console.log(e);
+                }
+               
+            }; pre_save_check()
+
+        } else {
+
+            const add_item = async () => {
+                try {
+
+                    // const { item_id } = this.state.item_id
+
+                    const { id, name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id, is_lost, is_found, found_date, resolved, category_select, sub_cat_select } = this.state;
+                    console.log("this state pre save", this.state);
+                    if (this.props.type === 'edit_item') {
+                        const id = this.state.item_id
+                        console.log(this.state);
+
+                    }
+
+                    const save_to_db = async () => {
+
+                        try {
+                            const url = this.state.db_url;
+                            const method = this.state.url_method;
+                            const category_id = category_select;
+                            const sub_category = sub_cat_select;
+                            console.log("item add before save ", id);
+                            const results = await fetch(url, {
+                                method: method,
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ id, name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id, is_lost, is_found, found_date, resolved })
+                            });
+                            console.log(results);
+                            const data = await results.json();
+                            console.log(data);
+                            localStorage.clear();
+                            console.log("befor exit");
+                        }
+
+                        catch (e) {
+                            console.log(e);
+                        }
+
+                    }; save_to_db()
 
                 }
-                const save_to_db = async () => {
-                 
-                    try {
-                        console.log("in the try ",id);
-                        console.log("we are in the edit save ");
-                        const url = this.state.db_url;
-                        const method = this.state.url_method;
-                        const category_id = category_select;
-                        const sub_category =  sub_cat_select;
-                        console.log("item add before save ", id);
-                        const results = await fetch(url, {
-                            method: method,
-                            headers: { 'Content-Type': 'application/json' },
-                            body:JSON.stringify({id, name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id, is_lost, is_found, found_date, resolved})
-                        });
-                        console.log(results);
-                        const data = await results.json();
-                        console.log(data);
-                        localStorage.clear();
-                        console.log("befor exit");
-                    }
 
-                    catch (e) {
-                        console.log(e);
-                    }
+                catch (e) {
+                    console.log(e);
+                }
 
-            
-                }; save_to_db()
+            }; add_item();
 
-            }
-            catch (e) {
-                console.log(e);
-            }
-
-        }; add_item();
-
+        }
     }
 
     render() {
-        console.log(this.state.sub_category);
-        console.log("item id", this.state.item_id);
+
         return (
             <>
 
@@ -256,34 +280,32 @@ class ItemForm extends React.Component {
                         <FormInputLabel name='name' value={this.state.name || ''} label='Item Name' type='text' onChange={this.handleInputChange} />
 
                         <label> Select Category</label>
-                        <select name='category_select' className='input_conatainer'  title={"yoyo"} onChange={this.handleSelectChange} >
-                        
-                        {
-                            this.state.categories.map((item, index) => {
-                                console.log(item);
-                                return (
-                                    <option key={index} value={item['cat_id']|| ''} >{item.name}</option>
-                                )
-                            })
-                        }
+                        <select name='category_select' className='input_conatainer' title={"yoyo"} onChange={this.handleSelectChange} >
+
+                            {
+                                this.state.categories.map((item, index) => {
+                                    return (
+                                        <option key={index} value={item['cat_id'] || ''} >{item.name}</option>
+                                    )
+                                })
+                            }
 
                         </select>
 
                         <label> Select Sub at</label>
                         {
-                      
-                                <>
-                                    <select name='sub_cat_select' className='input_conatainer' onChange={this.handleSubCatChange} >
-                                        {
-                                            this.state.sub_category.map((item, index) => {
-                                                console.log(item);
-                                                return (
-                                                    <option key={index} value={item['sub_cat_id']|| ''} >{item.name}</option>
-                                                )
-                                            })
-                                        }
-                                    </select>
-                                </>
+
+                            <>
+                                <select name='sub_cat_select' className='input_conatainer' onChange={this.handleSubCatChange} >
+                                    {
+                                        this.state.sub_category.map((item, index) => {
+                                            return (
+                                                <option key={index} value={item['sub_cat_id'] || ''} >{item.name}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </>
                         }
                         <FormInputLabel name='height' label='Height ' value={this.state.height || ''} type='number' onChange={this.handleInputChange} />
                         <FormInputLabel name='width' label='Width ' value={this.state.width || ''} type='number' onChange={this.handleInputChange} />

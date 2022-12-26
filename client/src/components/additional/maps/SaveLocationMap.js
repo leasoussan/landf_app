@@ -30,7 +30,6 @@ function SaveLocationMap({saved_position}) {
 
     // here we take the props location and we set it in the state
     const found_location = (location) => {
-        console.log("location", location);
         setPosition(location)
     }
 
@@ -82,7 +81,6 @@ export const LocationMarker = ({ found_location }) => {
         
     })
 
-    console.log("we are here")
     return position === null ? 'There is No Position' : (
         <Marker position={position}>
             <Popup>Item Found</Popup>

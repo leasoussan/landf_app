@@ -14,6 +14,7 @@ const initState = {
 export const reducer = (state = initState, action = {}) => {
     switch (action.type) {
         case TOKEN:
+            console.log("reducer",action.payload);
             return { ...state, token: action.payload }
 
         case ADD_ITEM_LOAD_STORED:

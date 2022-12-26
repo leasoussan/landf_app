@@ -7,7 +7,7 @@ import { DisplaySavedLocation } from '../additional/maps/DisplaySavedLocation.js
 import ItemForm from './ItemForm.js';
 import { Link } from 'react-router-dom';
 import CheckItemMatch from './CheckItemMatch.js';
-
+import { UserFoundMatchSuggestion } from '../additional/suggestions/UserFoundSuggestions.js';
 
 class ItemDetail extends Component {
   constructor(props) {
@@ -65,14 +65,15 @@ class ItemDetail extends Component {
 }
 
   render() {
-
-    const itemData = Object.entries(this.state.item_data)
     const type = this.state.type
+    // const 
     return (
       <>
    
-        <Button key={this.props.item_id} className="me-2 mb-2" onClick={() => this.setState({ show: true })}>
-          Detail
+        <Button className={"me-2 mb-2 item_display_clicked"} key={this.props.item_id} onClick={() => this.setState({ show: true })}>
+        <img className='img_item_dashboard' src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-tools-hanging-on-wall-royalty-free-image-760251967-1563391812.jpg?crop=1.00xw:0.502xh;0,0.0561xh&resize=1200:*' />
+
+              {type} <h3>{this.state.item_data.found_date}</h3>
         </Button>
 
         <Modal show={this.state.show} fullscreen={true} onHide={() => { this.setState({ show: false }) }}>
@@ -83,7 +84,7 @@ class ItemDetail extends Component {
 
             {type === 'display_item' ?
               <>
-
+                <div className='display_item_modal'>
                 <h1>Item Details </h1>
                 <div key={this.item_id}>
                   <img src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-tools-hanging-on-wall-royalty-free-image-760251967-1563391812.jpg?crop=1.00xw:0.502xh;0,0.0561xh&resize=1200:*' />
@@ -96,6 +97,12 @@ class ItemDetail extends Component {
                   <DisplaySavedLocation found_saved_location={this.state.location} />
                   <button onClick={this.handleEditItem}>EDIT ITEM</button>
                   <button onClick={this.handleDelete} value={this.state.item_data.id}>DELET</button>
+                </div>
+                </div>
+                asfsdf
+                <userFoundMatchSuggestion/>
+                <div>
+ 
                 </div>
               </>
               :

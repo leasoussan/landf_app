@@ -19,7 +19,17 @@ const LoginRegistrationForm = (props) => {
     const {token, setToken} = useContext(AppContext)
    
     const navigate= useNavigate()
-  
+    
+    // const required = value => {
+    //     if (!value) {
+    //       return (
+    //         <div className="alert alert-danger" role="alert">
+    //           This field is required!
+    //         </div>
+    //       );
+    //     }
+    //   };
+
     const handleClick = async () => {
         console.log("click button check props", props.title);
         if(props.title === 'Login'){
@@ -95,7 +105,7 @@ const mapStateToProps = state  => {
 
 const mapDispatchToProps = (dispatch) => {
         return {
-            get_token: (data)=> dispatch(get_token(data))
+            get_token: (token)=> dispatch(get_token(token))
         }
     }
 

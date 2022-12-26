@@ -26,9 +26,9 @@ item_router.delete('/delete_item/:id', delet)
 item_router.put('/edit_item/:id', edit_item)
 item_router.get('/found_item_list/:user_id', getUserFoundItem)
 item_router.get('/lost_item_list/:user_id', getUserLostItem)
-item_router.get('/found_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getFoundItemPool)
-
-item_router.get('/lost_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getLostItemPool)
+// item_router.get('/found_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getFoundItemPool)
+/ item_router.get('/found_item_pool/:user_id/:category_id/:sub_category/', getFoundItemPool)
+item_router.get('/lost_item_pool/:user_id/:category_id/:sub_category/', getLostItemPool)
 
 // item_router.get('/search_found_item_db/:lostItem', CheckItemMatch)
 

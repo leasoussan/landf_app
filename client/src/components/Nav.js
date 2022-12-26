@@ -15,17 +15,8 @@ const Nav = (props) => {
     const navigate = useNavigate()
 
     useEffect(()=>{
-        try{
-            const data = jwt_decode(token)
-
-            console.log("the data ",data.userId);
-            setUserId(data.userId)
-
-        }
-        catch(e){
-            console.log(e);
-        }
-    },[token])
+      console.log(props);
+    },[])
 
 
 
@@ -45,6 +36,7 @@ const Nav = (props) => {
     }
 
     if (token) {
+        console.log(navuser_id);
         return (
             <Stack spacing={2} direction='row'>
                 <Button component={Link} to={`/dashboard/${navuser_id}`}>Dashboard</Button>

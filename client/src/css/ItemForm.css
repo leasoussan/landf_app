@@ -1,9 +1,22 @@
-
+.modal-fullscreen .modal-content{
+    width: 95vw;
+    background-color: whitesmoke ;
+    /* opacity: 0.9; */
+}
 .modal-content {
     display: flex;
     align-items: center;
     width: 80vh;
     height: 90vh;
+    border: solid 4px red;
+    background-color: aqua;
+}
+
+.display_item_modal{
+    border: solid 6px pink;
+    width: 60%;
+    height: 95vh;
+    overflow-y: scroll;
 }
 .modal-body {
     display: flex;
@@ -11,6 +24,11 @@
     width: 95%;
     height: 95%;
     overflow-y: scroll;
+}
+
+.imgae_item_detail{
+    width: 60%;
+    
 }
 
 .add_item_form {
@@ -47,3 +65,4 @@
     margin-left: 2rem;
     width: 90vw;
 }
+

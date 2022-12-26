@@ -184,13 +184,14 @@ class ItemForm extends React.Component {
         console.log(this.state);
         const add_item = async () => {
             try {
-                // console.log("the toekn", this.props.token);
-                //     if (!this.props.token) {
-                //         addToLocatStorage('item_data_suspended', this.state)
-                //         this.setState({ redirect_register: true })
-                //     }
-                //      else {
-                // const { item_id } = this.state.item_id
+                console.log("the toekn", this.props.token);
+                    if (!this.props.token) {
+                        console.log("getting to the if of save");
+                        addToLocatStorage('item_data_suspended', this.state)
+                        this.setState({ redirect_register: true })
+                    }
+                     else {
+                const { item_id } = this.state.item_id
     
                 const {id, name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id, is_lost, is_found, found_date, resolved, category_select, sub_cat_select } = this.state;
                 console.log(id);
@@ -229,15 +230,17 @@ class ItemForm extends React.Component {
             
                 }; save_to_db()
 
-            }
-            catch (e) {
-                console.log(e);
-            }
+            
 
-        }; add_item();
+        }
+    }
+    catch (e) {
+        console.log(e);
+    }
+    };
+    add_item();
 
     }
-
     render() {
         console.log(this.state.sub_category);
         console.log("item id", this.state.item_id);
@@ -260,7 +263,6 @@ class ItemForm extends React.Component {
                         
                         {
                             this.state.categories.map((item, index) => {
-                                console.log(item);
                                 return (
                                     <option key={index} value={item['cat_id']|| ''} >{item.name}</option>
                                 )

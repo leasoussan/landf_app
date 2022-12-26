@@ -48,8 +48,6 @@ class ItemForm extends React.Component {
         console.log(this.props.type);
         this.setState({ redirect_register: false })
 
-
-
         const getCategories = async () => {
             try {
                 const res = await fetch('/category', {
@@ -102,40 +100,62 @@ class ItemForm extends React.Component {
             }
         }
 
-
+        let decode_token = this.state.token;
 
         switch (this.props.type) {
+         
 
             case 'add_lost_item':
-                console.log("in the LOST", this.props.type);
-
-                this.setState({ is_lost: true })
-                break;
-            case 'add_found_item':
-                console.log("in the ADD FOUND", this.props.type);
-
-                this.setState({ is_found: true })
-                break;
-            case 'edit_item':
-                console.log("in the EDIT", this.props.type);
-                // this.setState({user_id:this.props.})
-                set_retrieved_item_data(this.item_data);
-                if (this.props.item_data.is_lost === true) {
-                }
-                break;
-            case 'get_pending_item':
                 try{
-                    const decode_token = jwt_decode(this.props.token)
-                    
-                    this.setState({user_id:decode_token.userId})
-                    set_retrieved_item_data(getFromLocalStorage('pending_data'))
+                    const decode_token = jwt_decode(this.props.token)                   
+                    this.setState({user_id:decode_token.userId})                
+                     this.setState({ is_lost: true })
 
                 }
                 catch(e){
                     console.log(e);
                 }
-         
-                
+                break;
+
+
+            case 'add_found_item':
+                try{
+                    const decode_token = jwt_decode(this.props.token)                   
+                    this.setState({user_id:decode_token.userId})
+                    this.setState({ is_found: true })
+                }
+                catch(e){
+                    console.log(e);
+                }
+              
+                break;
+
+
+            case 'edit_item':
+                try{
+                    const decode_token = jwt_decode(this.props.token)
+                    this.setState({user_id:decode_token.userId})
+                    set_retrieved_item_data(this.item_data);
+                }
+                catch(e){
+                    console.log(e);
+                }
+    
+                // if (this.props.item_data.is_lost === true) {
+                // }
+                break;
+
+
+            case 'get_pending_item':
+                try{
+                    const decode_token = jwt_decode(this.props.token)                   
+                    this.setState({user_id:decode_token.userId})
+                    set_retrieved_item_data(getFromLocalStorage('pending_data'))
+                }
+                catch(e){
+                    console.log(e);
+                }
+                        
                 break;
         }
 
@@ -198,21 +218,27 @@ class ItemForm extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
      
-
-        if (!this.props.token) {
-
-
         const verify = async() => {
+            console.log("in the verif");
             try{
+                console.log("in the verif TRY");
                 const response = await axios.get('/token')
+                console.log("the response ",response);
                 this.props.get_token(response.data.token) 
+
             }catch(e){
+                console.log("in the verif CATCH ");
                 addToLocatStorage('pending_data', (this.state))
                 this.setState({ redirect_register: true })
                 alert("you have to do somethng")
             }
         }
         verify()
+
+        if (!this.props.token) {
+            console.log("this is the place");
+
+        
         
 
         } else {
@@ -221,7 +247,6 @@ class ItemForm extends React.Component {
                 try {
 
                     // const { item_id } = this.state.item_id
-
                     const { id, name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id, is_lost, is_found, found_date, resolved, category_select, sub_cat_select } = this.state;
                     console.log("this state pre save", this.state);
                     if (this.props.type === 'edit_item') {
@@ -229,7 +254,6 @@ class ItemForm extends React.Component {
                         console.log(this.state);
 
                     }
-
                     const save_to_db = async () => {
 
                         try {
@@ -247,6 +271,7 @@ class ItemForm extends React.Component {
                             const data = await results.json();
                             console.log(data);
                             localStorage.clear();
+                            this.setState({show:false})
                             console.log("befor exit");
                         }
 

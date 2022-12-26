@@ -26,7 +26,6 @@ const Dashboard = (props) => {
     useEffect(() => {
 
         const getUserFoundList = async () => {
-            console.log(token);
             const get_token = await jwt_decode(token)
             const user_id = await get_token.userId
             setUserId(user_id)

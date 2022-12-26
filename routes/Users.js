@@ -9,7 +9,7 @@ router.post('/register', register);
 router.post('/create_profile/', createProfile);
 router.delete('/logout', logout);
 router.post('/login', login);
-router.get('/users', getUsers )
+router.get('/users', VerifyToken,getUsers )
 router.get('/token',  VerifyToken, token);
 export default router
 

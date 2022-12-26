@@ -13,6 +13,10 @@ import { addToLocatStorage, getFromLocalStorage } from '../../helpers/storage.js
 import Modal from 'react-bootstrap/Modal';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown'
+import axios from 'axios';
+import {get_token} from '../../redux/actions.js'
+
+
 
 class ItemForm extends React.Component {
     constructor(props) {
@@ -41,21 +45,10 @@ class ItemForm extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
+        console.log(this.props.type);
         this.setState({ redirect_register: false })
-        const get_token = async () => {
-            try {
-                const token  = this.props.token
-                const decode = jwt_decode(this.props.token);
-                console.log(decode);
-                const getUserId = decode.userId
-                this.setState({ user_id: getUserId })
-            }
-            catch (e) {
-                console.log(e);
-            }
-        }
-            ; get_token()
+
+
 
         const getCategories = async () => {
             try {
@@ -99,7 +92,7 @@ class ItemForm extends React.Component {
                     lat: stored_data.lat || '',
                     len: stored_data.len || '',
                     brand: stored_data.brand || '',
-                    user_id: stored_data.user_id || '',
+                    // user_id: stored_data.user_id || '',
                     sub_cat_select: stored_data.sub_category || '',
                     is_lost: stored_data.is_lost,
                     is_found: stored_data.is_found,
@@ -131,9 +124,17 @@ class ItemForm extends React.Component {
                 }
                 break;
             case 'get_pending_item':
-                // const user_id = jwt_decode(token)
-                // console.log(this.state.user_id);
-                set_retrieved_item_data(getFromLocalStorage('pending_data'))
+                try{
+                    const decode_token = jwt_decode(this.props.token)
+                    
+                    this.setState({user_id:decode_token.userId})
+                    set_retrieved_item_data(getFromLocalStorage('pending_data'))
+
+                }
+                catch(e){
+                    console.log(e);
+                }
+         
                 
                 break;
         }
@@ -196,20 +197,23 @@ class ItemForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log("check token ", this.props.token);
+     
+
         if (!this.props.token) {
-            const pre_save_check = async () => {
-                try{
-                    console.log(this.state);
-               
-                    addToLocatStorage('pending_data', (this.state))
-                    this.setState({ redirect_register: true })
-                }
-                catch(e){
-                    console.log(e);
-                }
-               
-            }; pre_save_check()
+
+
+        const verify = async() => {
+            try{
+                const response = await axios.get('/token')
+                this.props.get_token(response.data.token) 
+            }catch(e){
+                addToLocatStorage('pending_data', (this.state))
+                this.setState({ redirect_register: true })
+                alert("you have to do somethng")
+            }
+        }
+        verify()
+        
 
         } else {
 
@@ -338,6 +342,12 @@ const mapStateToProps = (state) => {
 }
 
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        get_token: (token)=> dispatch(get_token(token))
+    }
+}
 
-export default connect(mapStateToProps, null)(ItemForm)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ItemForm)
 

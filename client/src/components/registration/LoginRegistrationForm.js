@@ -58,7 +58,6 @@ const LoginRegistrationForm = (props) => {
                         'Content-type': 'application/json'
                     }
                 })
-                // send.json({msg:'Register Succesfull'})
                 navigate('/login')
             } catch(e){
                 console.log(e.response.data)

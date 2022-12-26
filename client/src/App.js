@@ -24,9 +24,10 @@ function App() {
       <AppContext.Provider value={{ token, setToken }}>
 
         <div className="App">
+         
           <Nav />
           <Routes>
-            <Route path='/' element={<Home />} />
+            <Route path='/' element={<Home/>} />
             <Route path='/login' element={<LoginRegistrationForm title='Login' />} />
             <Route path='/register' element={<LoginRegistrationForm title='Register' />} />
             <Route path='/users' element={<Users />} />

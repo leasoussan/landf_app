@@ -11,6 +11,9 @@ import Nav from './components/Nav.js';
 import { Auth } from './auth/Auth';
 import { Provider } from 'react-redux';
 import ItemDetail from './components/items/ItemDetail';
+
+// import { AppContextProvider } from '../src/helpers/AppContextProvider.js';
+
 export const AppContext = createContext(null)
 
 function App() {

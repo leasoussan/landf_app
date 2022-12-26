@@ -184,13 +184,13 @@ class ItemForm extends React.Component {
         console.log(this.state);
         const add_item = async () => {
             try {
-                // console.log("the toekn", this.props.token);
-                //     if (!this.props.token) {
-                //         addToLocatStorage('item_data_suspended', this.state)
-                //         this.setState({ redirect_register: true })
-                //     }
-                //      else {
-                // const { item_id } = this.state.item_id
+                console.log("the toekn", this.props.token);
+                    if (!this.props.token) {
+                        addToLocatStorage('item_data_suspended', this.state)
+                        this.setState({ redirect_register: true })
+                    }
+                     else {
+                const { item_id } = this.state.item_id
     
                 const {id, name, height, width, weight, color_in, color_out, material, lat, len, brand, user_id, is_lost, is_found, found_date, resolved, category_select, sub_cat_select } = this.state;
                 console.log(id);
@@ -230,13 +230,17 @@ class ItemForm extends React.Component {
                 }; save_to_db()
 
             }
-            catch (e) {
-                console.log(e);
-            }
+            
+        }
+        
+        catch (e) {
+            console.log(e);
+        }
 
-        }; add_item();
+        add_item();
 
     }
+}
 
     render() {
         console.log(this.state.sub_category);

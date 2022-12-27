@@ -27,7 +27,8 @@ CREATE TABLE category(
 CREATE TABLE sub_cat(
     sub_cat_id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
-    category INT REFERENCES category(cat_id)
+    category INT REFERENCES category(cat_id),
+    sub_sub_cat VARCHAR(55)
 );
 
 
@@ -53,6 +54,87 @@ is_found BOOLEAN,
 resolved BOOLEAN,
 )
 -------------
+
+CREATE TABLE color(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(55) NOT NULL,
+    range INT 
+ 
+)
+
+CREATE TABLE item_identification_type(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(55) NOT NULL,
+    needs_authentification BOOLEAN,
+    item_type VARCHAR(50) NOT NULL
+)
+
+
+CREATE TABLE item_identification_details(
+    id SERIAL PRIMARY KEY,
+    item_id INT REFERENCES item(id) ON DELETE CASCADE,
+    identification_type INT REFERENCES item_identification_type(id) ON DELETE CASCADE,
+    context VARCHAR(200) NOT NULL,
+    match BOOLEAN 
+)
+
+
+CREATE TABLE item_content (
+    id SERIAL PRIMARY KEY,
+    item_id INT REFERENCES item(id) ON DELETE CASCADE,
+    category_id INT REFERENCES category(cat_id) ON DELETE CASCADE,
+    sub_cat INT REFERENCES sub_cat(sub_cat_id) ON DELETE CASCADE,
+    color INT REFERENCES colors(id) ON DELETE CASCADE
+)
+
+
+CREATE TABLE conversation(
+conv_id SERIAL PRIMARY KEY, 
+date_started TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
+user_id INT REFERENCES users(id)  ON DELETE CASCADE
+);
+
+
+
+
+CREATE TABLE suggestion(
+	id SERIAL PRIMARY KEY,
+	type VARCHAR(50) NOT NULL, 
+    suggestionItem_id INT REFERENCES item(id) ON DELETE CASCADE
+	item_id INT REFERENCES item(id),
+	conversation INT REFERENCES conversation(conv_id) ON DELETE CASCADE,
+    resolved BOOLEAN
+
+)
+
+
+
+
+CREATE TABLE message(
+msg_id SERIAL PRIMARY KEY, 
+date_started TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
+user_id INT REFERENCES users(id),
+conversation INT REFERENCES conversation(conv_id) ON DELETE CASCADE,
+is_last_sent BOOLEAN
+)
+
+
+CREATE TABLE notification_type(
+    id SERIAL PRIMARY KEY, 
+    name VARCHAR(55) NOT NULL
+    );
+	
+	
+	
+
+CREATE TABLE notification(
+ntf_id SERIAL PRIMARY KEY, 
+date_started TIMESTAMP NOT NULL DEFAULT CURRENT_DATE,
+user_id INT REFERENCES users(id)  ON DELETE CASCADE,
+item_id INT REFERENCES item(id)  ON DELETE CASCADE,
+type INT REFERENCES notification_type(id) ON DELETE CASCADE
+status VARCHAR(55)  
+)	
 
 
 

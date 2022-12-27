@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import '../../css/ItemDetail.css'
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -7,7 +8,8 @@ import { DisplaySavedLocation } from '../additional/maps/DisplaySavedLocation.js
 import ItemForm from './ItemForm.js';
 import { Link } from 'react-router-dom';
 import CheckItemMatch from './CheckItemMatch.js';
-import UserFoundMatchSuggestion from '../additional/suggestions/UserFoundSuggestions.js';
+import UserFoundMatchSuggestion from '../additional/suggestions/UserFoundMatchSuggestion.js';
+import UserLostMatchSuggestion from '../additional/suggestions/UserLostMatchSuggestion.js';
 import '../../css/Suggestion.css'
 
 
@@ -89,20 +91,30 @@ class ItemDetail extends Component {
                 <div className='display_item_modal'>
                 <h1>Item Details </h1>
                 <div key={this.item_id}>
-                  <img src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-tools-hanging-on-wall-royalty-free-image-760251967-1563391812.jpg?crop=1.00xw:0.502xh;0,0.0561xh&resize=1200:*' />
+                  <img className='image_modal_item' src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-tools-hanging-on-wall-royalty-free-image-760251967-1563391812.jpg?crop=1.00xw:0.502xh;0,0.0561xh&resize=1200:*' />
                   <div>
                     {/* <h3>{(key.found_date).slice(0,10)}</h3> */}
-                    <h3></h3>
-                    <h3>{this.state.item_data.name}</h3>
+                    <h3> yola</h3>
+                    <p>{this.state.item_data.name}</p>
                     <h3>{this.state.item_data.id}</h3>
                   </div>
+                  <div className='item_detail_map'>
                   <DisplaySavedLocation found_saved_location={this.state.location} />
+
+                  </div>
                   <button onClick={this.handleEditItem}>EDIT ITEM</button>
                   <button onClick={this.handleDelete} value={this.state.item_data.id}>DELET</button>
                 </div>
                 </div>
-                
-                <UserFoundMatchSuggestion/>
+                { 
+                  !this.state.item_data.is_found ?
+                      < UserLostMatchSuggestion item={this.item_data}/>
+                       :
+                       <UserFoundMatchSuggestion />
+
+
+                }
+               
                 <div>
  
                 </div>

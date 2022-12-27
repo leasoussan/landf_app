@@ -14,8 +14,8 @@ export const DisplaySavedLocation = ({found_saved_location} ) => {
     
     return(
         <>
-        <div id="#map" style={{ width: '60vw', height: '35vh' }}>
-        <MapContainer center={position} zoom={15} scrollWheelZoom={true}>
+        <div id="#map" style={{ width: '45vw', height: '45vh' }}>
+        <MapContainer center={position} zoom={10} scrollWheelZoom={true}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -30,7 +30,7 @@ export const DisplaySavedLocation = ({found_saved_location} ) => {
           <Circle
             center={position}
             pathOptions={{ fillColor: 'red' }}
-            radius={100}
+            radius={1000}
             stroke={true}
           />
         </MapContainer>

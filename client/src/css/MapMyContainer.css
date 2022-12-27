@@ -5,3 +5,8 @@
     border-radius: 15%;
     margin-top: 5rem;
 }
+
+.map_diplay_item{
+    width: 80%;
+    border: solid 8px orange;
+}

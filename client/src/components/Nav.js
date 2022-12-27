@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { useContext, useEffect , useState} from 'react';
-
+import { connect } from 'react-redux';
 import { AppContext } from '../App';
 
 const Nav = (props) => {
@@ -15,7 +15,6 @@ const Nav = (props) => {
     const navigate = useNavigate()
 
     useEffect(()=>{
-      console.log(props);
     },[])
 
 
@@ -60,4 +59,17 @@ const Nav = (props) => {
     }
 
 }
-export default Nav
+
+
+const mapStateToProps = state => {
+    return {
+        token: state.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        // store_token: (token)=>{ dispatch(get_token(token))}
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Nav)

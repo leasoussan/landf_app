@@ -14,7 +14,7 @@ import Modal from 'react-bootstrap/Modal';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown'
 import axios from 'axios';
-import {get_token} from '../../redux/actions.js'
+import { get_token } from '../../redux/actions.js'
 
 
 
@@ -25,9 +25,9 @@ class ItemForm extends React.Component {
             item_id: '',
             name: '',
             item_data: [],
-            category_select: '',
             categories: [],
             sub_category: [],
+            category_select: '',
             sub_cat_select: '',
             selected_position: '',
             found_date: new Date(),
@@ -45,24 +45,14 @@ class ItemForm extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.type);
-        this.setState({ redirect_register: false })
+        const global_categories = this.props.global_sub_cat_per_cat;
+        let cat_list_to_state = [];
+        for (const category of global_categories) {
+            const cat = category[0];
+            cat_list_to_state.push(cat)
+        }
+        this.setState({ categories: cat_list_to_state });
 
-        const getCategories = async () => {
-            try {
-                const res = await fetch('/category', {
-                    method: 'GET'
-                });
-                const data = await res.json()
-                console.log(data);
-                console.log(data[0].name);
-                this.setState({ categories: data })
-            }
-            catch (e) {
-                console.log(e);
-            }
-        };
-        getCategories();
 
         const set_retrieved_item_data = () => {
 
@@ -90,7 +80,6 @@ class ItemForm extends React.Component {
                     lat: stored_data.lat || '',
                     len: stored_data.len || '',
                     brand: stored_data.brand || '',
-                    // user_id: stored_data.user_id || '',
                     sub_cat_select: stored_data.sub_category || '',
                     is_lost: stored_data.is_lost,
                     is_found: stored_data.is_found,
@@ -100,70 +89,67 @@ class ItemForm extends React.Component {
             }
         }
 
-        let decode_token = this.state.token;
+        // let decode_token = this.state.token;
 
         switch (this.props.type) {
-         
-
             case 'add_lost_item':
-                try{
-                    const decode_token = jwt_decode(this.props.token)                   
-                    this.setState({user_id:decode_token.userId})                
-                     this.setState({ is_lost: true })
-
+                try {
+                    const decode_token = jwt_decode(this.props.token)
+                    this.setState({ user_id: decode_token.userId })
+                    this.setState({ is_lost: true })
+                    console.log("user id ", decode_token.user_id);
                 }
-                catch(e){
+                catch (e) {
                     console.log(e);
                 }
                 break;
 
 
             case 'add_found_item':
-                try{
-                    const decode_token = jwt_decode(this.props.token)                   
-                    this.setState({user_id:decode_token.userId})
+                try {
+                    const decode_token = jwt_decode(this.props.token)
+                    this.setState({ user_id: decode_token.userId })
                     this.setState({ is_found: true })
+                    console.log("user id ", decode_token.user_id);
                 }
-                catch(e){
+                catch (e) {
                     console.log(e);
+                    console.log("CATCH user id ", this.state.user_id);
                 }
-              
                 break;
 
-
             case 'edit_item':
-                try{
+                try {
                     const decode_token = jwt_decode(this.props.token)
-                    this.setState({user_id:decode_token.userId})
+                    this.setState({ user_id: decode_token.userId })
                     set_retrieved_item_data(this.item_data);
+                    console.log("user id ", decode_token.user_id);
                 }
-                catch(e){
+                catch (e) {
                     console.log(e);
                 }
-    
-                // if (this.props.item_data.is_lost === true) {
-                // }
+
                 break;
 
 
             case 'get_pending_item':
-                try{
-                    const decode_token = jwt_decode(this.props.token)                   
-                    this.setState({user_id:decode_token.userId})
+                try {
+                    const decode_token = jwt_decode(this.props.token)
+                    this.setState({ user_id: decode_token.userId })
                     set_retrieved_item_data(getFromLocalStorage('pending_data'))
+                    console.log("user id ", decode_token.user_id);
+
                 }
-                catch(e){
+                catch (e) {
                     console.log(e);
                 }
-                        
+
                 break;
         }
 
 
         const check_saving_type = () => {
-            // const {url , method_url} = [this.state.db_url, this.state.url_method]
             if (this.props.type === 'edit_item') {
-                // [url, method_url] = [(`http://localhost:3001/edit_item/:${this.state.item_id}`), 'PUT']
                 this.setState({ db_url: `http://localhost:3001/edit_item/${this.props.item_data.id}` })
                 this.setState({ url_method: 'PUT' })
 
@@ -186,11 +172,18 @@ class ItemForm extends React.Component {
     }
 
     handleSelectChange = async (e) => {
+        console.log(e);
         try {
             this.setState({ category_select: e.target.value })
-            const res = await fetch(`http://localhost:3001/sub_cat/${e.target.value}`);
-            const data = await res.json()
-            this.setState({ sub_category: data })
+            const sub_cat_toExtract = this.props.global_sub_cat_per_cat;
+        
+            const filterSubCat = sub_cat_toExtract.filter((global_cat_object) => {
+                // console.log();
+                return global_cat_object[0][0] == e.target.value
+            })       
+            // console.log(typeof filterSubCat[0][1]);
+           this.setState({sub_category:filterSubCat[0][1]})
+            
         }
         catch (e) {
             console.log(e);
@@ -217,16 +210,16 @@ class ItemForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-     
-        const verify = async() => {
-            console.log("in the verif");
-            try{
-                console.log("in the verif TRY");
-                const response = await axios.get('/token')
-                console.log("the response ",response);
-                this.props.get_token(response.data.token) 
 
-            }catch(e){
+        const verify = async () => {
+            console.log("in the verif");
+            try {
+                const response = await axios.get('/token');
+                console.log("response try", response);
+
+                this.props.get_token(response.data.token)
+
+            } catch (e) {
                 console.log("in the verif CATCH ");
                 addToLocatStorage('pending_data', (this.state))
                 this.setState({ redirect_register: true })
@@ -238,8 +231,8 @@ class ItemForm extends React.Component {
         if (!this.props.token) {
             console.log("this is the place");
 
-        
-        
+
+
 
         } else {
 
@@ -271,7 +264,7 @@ class ItemForm extends React.Component {
                             const data = await results.json();
                             console.log(data);
                             localStorage.clear();
-                            this.setState({show:false})
+                            this.setState({ show: false })
                             console.log("befor exit");
                         }
 
@@ -312,9 +305,13 @@ class ItemForm extends React.Component {
                         <select name='category_select' className='input_conatainer' title={"yoyo"} onChange={this.handleSelectChange} >
 
                             {
-                                this.state.categories.map((item, index) => {
+                                this.state.categories.map((item) => {
+                                    console.log("catgory_item", item);
                                     return (
-                                        <option key={index} value={item['cat_id'] || ''} >{item.name}</option>
+                                        <>
+                                            <option key={item.id} value={item[0]} >{item[1].toUpperCase()}</option>
+                                        </>
+
                                     )
                                 })
                             }
@@ -327,9 +324,13 @@ class ItemForm extends React.Component {
                             <>
                                 <select name='sub_cat_select' className='input_conatainer' onChange={this.handleSubCatChange} >
                                     {
-                                        this.state.sub_category.map((item, index) => {
+                               
+                                        this.state.sub_category.map((item, i) => {
+                                                
                                             return (
-                                                <option key={index} value={item['sub_cat_id'] || ''} >{item.name}</option>
+                                                <>
+                                                <option key={i} value={item['subcat_cat_id'] } >{item['name'] }</option>
+                                                </>
                                             )
                                         })
                                     }
@@ -359,17 +360,19 @@ class ItemForm extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log();
+    console.log("this state", state.list);
+
     return {
-        token: state.token,
-        // add_item_load: state.add_item_load
-    }
+        global_categories: state.global_categories,
+        global_sub_cat_per_cat: state.global_sub_cat_per_cat
+    };
+
 }
 
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        get_token: (token)=> dispatch(get_token(token))
+        get_token: (token) => dispatch(get_token(token))
     }
 }
 

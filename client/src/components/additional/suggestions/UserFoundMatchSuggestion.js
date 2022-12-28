@@ -24,7 +24,7 @@ export const UserFoundMatchSuggestion = (props) => {
     }, [])
 
     const chec=()=>{
-                    console.log("What do I have here props", props.item);
+                    console.log("What do I have here props", props);
  
     };
     chec()
@@ -55,7 +55,8 @@ export const UserFoundMatchSuggestion = (props) => {
  
 
 
-const sugestion_container = () => {
+const sugestion_container = (props) => {
+    console.log(props.userId);
     return (
         <Accordion >
             <Accordion.Item eventKey="0">

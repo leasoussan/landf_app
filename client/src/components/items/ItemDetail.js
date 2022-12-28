@@ -30,7 +30,14 @@ class ItemDetail extends Component {
   }
 
   componentDidMount() {
-  
+    // try{
+    //   const get_token = await jwt_decode(token)
+    //   const user_id = await get_token.userId
+    //   setUserId(user_id)
+
+    // }
+          
+
     this.setState({item_id: this.props.id})
     this.setState({ type: 'display_item' })
     const getItemDetail = async () => {
@@ -89,35 +96,41 @@ class ItemDetail extends Component {
             {type === 'display_item' ?
               <>
                 <div className='display_item_modal'>
-                <h1>Item Details </h1>
-                <div key={this.item_id}>
-                  <img className='image_modal_item' src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-tools-hanging-on-wall-royalty-free-image-760251967-1563391812.jpg?crop=1.00xw:0.502xh;0,0.0561xh&resize=1200:*' />
                   <div>
-                    {/* <h3>{(key.found_date).slice(0,10)}</h3> */}
-                    <h3> yola</h3>
+                  <h1>Item Details </h1>
+                  <h3>{(this.state.found_date)}</h3>
+                 
                     <p>{this.state.item_data.name}</p>
                     <h3>{this.state.item_data.id}</h3>
                   </div>
+                
+            
+                
+                 <img className='image_modal_item' src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-tools-hanging-on-wall-royalty-free-image-760251967-1563391812.jpg?crop=1.00xw:0.502xh;0,0.0561xh&resize=1200:*' />
+                  
+                </div>
+                  
+
                   <div className='item_detail_map'>
                   <DisplaySavedLocation found_saved_location={this.state.location} />
 
                   </div>
-                  <button onClick={this.handleEditItem}>EDIT ITEM</button>
-                  <button onClick={this.handleDelete} value={this.state.item_data.id}>DELET</button>
-                </div>
-                </div>
+
                 { 
                   !this.state.item_data.is_found ?
-                      < UserLostMatchSuggestion item={this.item_data}/>
+                      < UserLostMatchSuggestion item={this.item_data} userId={this.props.userId}/>
                        :
-                       <UserFoundMatchSuggestion />
+                       <UserFoundMatchSuggestion item={this.item_data} userId={this.props.userId}/>
 
 
                 }
                
-                <div>
- 
+        
+                  <div>
+                  <button onClick={this.handleEditItem}>EDIT ITEM</button>
+                  <button onClick={this.handleDelete} value={this.state.item_data.id}>DELET</button>
                 </div>
+                
               </>
               :
               <>
@@ -133,13 +146,22 @@ class ItemDetail extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
 
+
+const mapStateToProps = (state, ownProps) => {
   return {
-    store_load: state
-    // user_id:state.user_id
+      token: state.token,
+
   }
 }
 
 
-export default connect(mapStateToProps, null)(ItemDetail)
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+      // foundList_toLocal: (list) => dispatch(user_foundList_toStore(list)),
+      // lostList_toLocal: (list) => dispatch(user_lostList_toStore(list))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ItemDetail)

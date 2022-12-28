@@ -9,6 +9,7 @@ import { add_item,
     edit_item,
     delet
 } from "../controllers/Item.js";
+import { VerifyToken } from "../middleware/VerifyToken.js";
 // import CheckItemMatch from "../controllers/CheckItemMatch.js";
 const item_router = express.Router();
 
@@ -24,8 +25,8 @@ item_router.delete('/delete_item/:id', delet)
 // EDIT 
 // / Update - Put - Update/Modify a product
 item_router.put('/edit_item/:id', edit_item)
-item_router.get('/found_item_list/:user_id', getUserFoundItem)
-item_router.get('/lost_item_list/:user_id', getUserLostItem)
+item_router.get('/found_item_list/:user_id',VerifyToken, getUserFoundItem)
+item_router.get('/lost_item_list/:user_id', VerifyToken,getUserLostItem)
 // item_router.get('/found_item_pool/:user_id/:category_id/:sub_cat_id/:found_date/:location/', getFoundItemPool)
 / item_router.get('/found_item_pool/:user_id/:category_id/:sub_category/', getFoundItemPool)
 item_router.get('/lost_item_pool/:user_id/:category_id/:sub_category/', getLostItemPool)

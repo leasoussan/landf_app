@@ -10,7 +10,7 @@ import { AppContext } from '../App';
 import { connect } from 'react-redux';
 import { getFromLocalStorage } from "../helpers/storage.js";
 import axios from 'axios';
-import { get_token } from '../redux/actions.js';
+import { get_token,set_global_categories, set_global_subCat_cat} from '../redux/actions.js';
 
 const Home = (props) => {
     const [redirect, setRedirect] = useState(false)
@@ -26,19 +26,62 @@ const Home = (props) => {
         const verify = async () => {
             try {
                 console.log(token);
-                // const get_token = jwt_decode(token)
-                // console.log(get_token);
-                // if(response){
-                //     // setToken(response.data.token)
-                //     check_data_exisit()
-                //     setRedirect(true)
-                // }
+                const get_token = jwt_decode(token)
+                const user_id = get_token.userId
+                console.log("the user in home ", user_id);
+                if(get_token){
+                    check_data_exisit()
+                    // setRedirect(true)
+                }
               
             } catch (e) {
                 // setToken(null)
                 console.log("no token in the system yo");
             }
         };verify()
+
+            
+        const getCategories = async () => {
+            try {
+                const res = await fetch('/category', {
+                    method: 'GET'
+                });
+                const data = await res.json();
+                props.store_global_categories(data);
+        
+            }
+            catch (e) {
+                console.log(e);
+                console.log("do we have a problem ");
+            }
+         
+        };
+        getCategories();
+
+        let subCat_Cat_global_object = [];
+
+        const get_sub_cat_global_list = async ()=>{
+            try{
+                const res = await fetch('/sub_cat', {
+                    method: 'GET'
+                });
+                
+                const data = await res.json();
+                const globalCategories =  [...new Map(data.map(item => [item['subcat_cat_id'], item['cat_name']]))];
+                
+                globalCategories.forEach((cat)=> {
+                const subcat_perCat = data.filter(item => item['subcat_cat_id'] === cat[0])
+                const cat_andSubCat_item = [cat,subcat_perCat ];
+                subCat_Cat_global_object.push(cat_andSubCat_item)
+                    
+            })
+            props.store_global_subCat_cat(subCat_Cat_global_object)  
+            }
+            catch(e){
+                console.log(e);
+            }
+        };get_sub_cat_global_list()
+    
 
         const check_data_exisit = () => {
             const data = getFromLocalStorage('pending_data')
@@ -141,7 +184,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        store_token: (token)=>{ dispatch(get_token(token))}
+        store_token: (token)=>{ dispatch(get_token(token))},
+        store_global_categories :(list) => {dispatch(set_global_categories(list))},
+        store_global_subCat_cat :(object) => {dispatch(set_global_subCat_cat(object))}
     }
 }
 

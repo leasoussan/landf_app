@@ -24,20 +24,34 @@ const Dashboard = (props) => {
 
 
     useEffect(() => {
-
+        
+       
         const getUserFoundList = async () => {
-            const get_token = await jwt_decode(token)
-            const user_id = await get_token.userId
-            setUserId(user_id)
+
             try {
+                const get_token = await jwt_decode(token)
+                const user_id = await get_token.userId
+                console.log("user_id dashborad from token ",user_id);
+                setUserId(user_id)
                 const get_found_list = async () => {
                     try {
-                        const response = await fetch(`http://localhost:3001/found_item_list/${user_id}`,)
+                        const response = await fetch(`http://localhost:3001/found_item_list/${user_id}`, {
+                            headers:{
+                                'x-access-token':token
+                            }
+                        })
                         const data = await response.json()
-                        setFoundList(data);
-                        props.foundList_toLocal(data)
+                        if(response.status === 200){
+                            setFoundList(data);
+                            props.foundList_toLocal(data)
+                        }
+                        else{
+                            navigate('/login')
+                        }
+                       
                     }
                     catch (e) {
+                    
                         console.log(e);
                     }
                 };
@@ -45,11 +59,25 @@ const Dashboard = (props) => {
 
                 const get_lost_list = async () => {
                     try {
-                        const response = await fetch(`http://localhost:3001/lost_item_list/${user_id}`,)
+                        const get_token = await jwt_decode(token)
+                        const user_id = await get_token.userId
+                        console.log("user_id dashborad from token ",user_id);
+                        setUserId(user_id)
+
+                        const response = await fetch(`http://localhost:3001/lost_item_list/${user_id}`,{
+                            headers:{
+                                'x-access-token':token
+                            }
+                        })
                         const data = await response.json()
+                        if(response.status === 200){
+
                         setLostList(data);
-                        // props.dispatch(user_foundList_toStore(data))
                         props.lostList_toLocal(data)
+                    }
+                    else{
+                        navigate('/login')
+                    }
                     }
                     catch (e) {
                         console.log(e);
@@ -60,7 +88,9 @@ const Dashboard = (props) => {
 
 
             } catch (e) {
+
                 console.log(e);
+                navigate('/login')
             }
         }
         getUserFoundList()
@@ -104,7 +134,7 @@ const Dashboard = (props) => {
 
                                         <p className="text-sm text-gray-500">Is Lost: {item.is_found ? "Yes I found it:) waiting for you " : "this item is in the wrong place"}</p>
 
-                                        <ItemDetail item_id={item.id} />
+                                        <ItemDetail item_id={item.id} userId ={userId} />
 
                                         <CheckItemMatch item_data={item} type={item.is_found ? 'found' : 'lost'} />
                                     </div>

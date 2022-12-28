@@ -14,7 +14,7 @@ export const DisplaySavedLocation = ({found_saved_location} ) => {
     
     return(
         <>
-        <div id="#map" style={{ width: '45vw', height: '45vh' }}>
+        <div id="#map" style={{ width: '35vw', height: '35vh' }}>
         <MapContainer center={position} zoom={10} scrollWheelZoom={true}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

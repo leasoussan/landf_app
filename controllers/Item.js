@@ -96,7 +96,6 @@ export const getUserFoundItem = (req, res) => {
     db('item')
         .select('*')
         .where({ user_id: user_id, is_found: true })
-        .returning('*')
         .then(rows => {
             if (rows.length === 0) {
                 res.json({ msg: "null" })
@@ -104,6 +103,7 @@ export const getUserFoundItem = (req, res) => {
             } else {
 
                 res.json(rows)
+            
             }
 
         })
@@ -119,7 +119,6 @@ export const getUserLostItem = (req, res) => {
     db('item')
         .select('*')
         .where({ user_id: user_id, is_lost: true })
-        .returning('*')
         .then(rows => {
             if (rows.length === 0) {
                 res.json({ msg: "null" })

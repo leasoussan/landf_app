@@ -1,28 +1,29 @@
-
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Col from 'react-bootstrap/esm/Col';
 import '../css/ItemContent.css'
+import { connect } from 'react-redux';
 
-export const AddItemContent = () => {
+const AddItemContent = (props) => {
     const [category_select, setCategorySelect] = useState('');
     const [categories, setCategories] = useState('');
     const [sub_cat_select, setSubCatSelect] = useState('');
-
     const [subCategory, setSubCategory] = useState('');
     const [color, setColor] = useState('')
 
-    const getCategories = async () => {
-        try {
-            const res = await fetch('/category', {
-                method: 'GET'
-            });
-            const data = await res.json()
-            console.log("category in item content ", data);
-            // setCategories(data)
+    useEffect(()=>{
+            // console.log(this.props);
+    },[])
+
+
+    const getCategories =  () => {
+        console.log("nadie me olvido yosoy trnaquila");
+        try{
+            // const global_categories = this.props.global_categories;
+           console.log(this.props);
         }
-        catch (e) {
+        catch(e){
             console.log(e);
         }
     };
@@ -84,18 +85,20 @@ export const AddItemContent = () => {
 
                 <form className='add_item_form' onSubmit={handleSubmit} >
 
-                    <Col xs={10} md={7} lg={7} className='form_layout'>
+                    <Col xs={12} md={5} lg={4} className='form_layout'>
 
                         <label> Select Category</label>
                         <select name='category_select' className='input_conatainer' title={"yoyo"} onChange={handleSelectChange} >
 
-                            {/* {
-                                categories.map((item, index) => {
-                                    return (
-                                        <option key={index} value={item['cat_id'] || ''} >{item.name}</option>
-                                    )
-                                })
-                            } */}
+                            {
+                                console.log(typeof categories)
+                                // categories.map((item, index) => {
+                                    
+                                //     return (
+                                //         <option key={index} >{item.name}</option>
+                                //     )
+                                // })
+                            }
 
                         </select>
 
@@ -158,7 +161,7 @@ export const AddItemContent = () => {
 
 
 
-const ItemContentForm = () => {
+export const ItemContentForm = () => {
     return (
         <Accordion >
             <Accordion.Item eventKey="0">
@@ -175,4 +178,25 @@ const ItemContentForm = () => {
     );
 }
 
-export default ItemContentForm;
+
+const mapStateToProps = (state) => {
+    console.log("this state", state);
+    const global_categories= state.global_categories;
+    const global_sub_cat_per_cat= state.global_sub_cat_per_cat;
+
+    return {
+        global_categories,
+        global_sub_cat_per_cat
+    };
+
+}
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddItemContent)
+

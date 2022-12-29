@@ -1,8 +1,7 @@
-import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import '../css/ItemForm.css'
-import { useContext, useState, useEffect } from 'react';
+import React,{ creteContext, useContext, useState, useEffect } from 'react';
 import jwt_decode from 'jwt-decode';
 import { navigate, useNavigate } from 'react-router-dom';
 import ItemForm from './items/ItemForm';
@@ -12,9 +11,13 @@ import { getFromLocalStorage } from "../helpers/storage.js";
 import axios from 'axios';
 import { get_token,set_global_categories, set_global_subCat_cat} from '../redux/actions.js';
 
+
+
+
 const Home = (props) => {
+    
     const [redirect, setRedirect] = useState(false)
-    const {token, setToken} = useContext(AppContext)
+    const {token, setToken, isCategory , setIsCategory } = useContext(AppContext)
     const [userId, setUserId] = useState('');
     const [type, setType] = useState('');
     const [show, setShow] = useState(false);
@@ -23,6 +26,7 @@ const Home = (props) => {
 
 
     useEffect(() => {
+        console.log("effect ********",isCategory );
         const verify = async () => {
             try {
                 console.log(token);
@@ -40,6 +44,7 @@ const Home = (props) => {
             }
         };verify()
 
+      
             
         const getCategories = async () => {
             try {
@@ -47,6 +52,7 @@ const Home = (props) => {
                     method: 'GET'
                 });
                 const data = await res.json();
+                console.log("data get cat from home ", data);
                 props.store_global_categories(data);
         
             }
@@ -75,6 +81,7 @@ const Home = (props) => {
                 subCat_Cat_global_object.push(cat_andSubCat_item)
                     
             })
+            console.log("subcat global", subCat_Cat_global_object);
             props.store_global_subCat_cat(subCat_Cat_global_object)  
             }
             catch(e){
@@ -98,7 +105,7 @@ const Home = (props) => {
 
 
 
-    }, [])
+    }, [isCategory])
 
     const handleShow = (type) => {
         switch (type) {
@@ -178,7 +185,8 @@ const Home = (props) => {
 
 const mapStateToProps = state => {
     return {
-        // stored_token: state.token
+        global_categories: state.global_categories,
+        global_sub_cat_per_cat: state.global_sub_cat_per_cat,
     }
 }
 
@@ -186,7 +194,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         store_token: (token)=>{ dispatch(get_token(token))},
         store_global_categories :(list) => {dispatch(set_global_categories(list))},
-        store_global_subCat_cat :(object) => {dispatch(set_global_subCat_cat(object))}
+        store_global_subCat_cat :(list) => {dispatch(set_global_subCat_cat(list))}
     }
 }
 

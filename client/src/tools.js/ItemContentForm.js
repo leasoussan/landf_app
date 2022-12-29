@@ -1,73 +1,109 @@
+
 import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Col from 'react-bootstrap/esm/Col';
 import '../css/ItemContent.css'
 import { connect } from 'react-redux';
+import { AppContext } from '../App';
+import { set_global_subCat_cat } from '../redux/actions.js';
+import Colors from './Colors.js';
 
-const AddItemContent = (props) => {
+export const AddItemContent = (props) => {
+    const { token, setToken, isCategory, setIsCategory } = useContext(AppContext)
     const [category_select, setCategorySelect] = useState('');
-    const [categories, setCategories] = useState('');
+    const [categories, setCategories] = useState([]);
     const [sub_cat_select, setSubCatSelect] = useState('');
     const [subCategory, setSubCategory] = useState('');
     const [color, setColor] = useState('')
 
-    useEffect(()=>{
-            // console.log(this.props);
-    },[])
+    useEffect(() => {
+        console.log(props);
+        const checkState = () => {
+            if (props.globalCat.length === 0) {
+                console.log("the place to be", props.global_sub_cat_per_cat);
+                setIsCategory(true)
+                let subCat_Cat_global_object = [];
+                const get_sub_cat_global_list = async () => {
+                    try {
+                        const res = await fetch('/sub_cat', {
+                            method: 'GET'
+                        });
 
+                        const data = await res.json();
+                        const globalCategories = [...new Map(data.map(item => [item['subcat_cat_id'], item['cat_name']]))];
 
-    const getCategories =  () => {
-        console.log("nadie me olvido yosoy trnaquila");
-        try{
-            // const global_categories = this.props.global_categories;
-           console.log(this.props);
+                        globalCategories.forEach((cat) => {
+                            const subcat_perCat = data.filter(item => item['subcat_cat_id'] === cat[0])
+                            const cat_andSubCat_item = [cat, subcat_perCat];
+                            setCategories(cat);
+                            subCat_Cat_global_object.push(cat_andSubCat_item);
+                            setCategories(cat_andSubCat_item)
+
+                        })
+                        props.store_global_subCat_cat(subCat_Cat_global_object)
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                }; get_sub_cat_global_list()
+            }
+        }; checkState()
+
+        const global_categories = props.globalCat;
+        let cat_list_to_state = [];
+        for (const category of global_categories) {
+            const cat = category[0];
+            cat_list_to_state.push(cat)
         }
-        catch(e){
-            console.log(e);
-        }
-    };
-    getCategories();
-
-
+        setCategories(cat_list_to_state);
+    }, [])
 
     const handleSelectChange = async (e) => {
-        console.log("e.target.value category select", e.target.value);
+        console.log(e);
         try {
             setCategorySelect(e.target.value)
-            const res = await fetch(`http://localhost:3001/sub_cat/${e.target.value}`);
-            const data = await res.json()
-            setSubCategory(data)
+            const sub_cat_toExtract = props.globalCat;
+            console.log(props.globalCat);
+            const filterSubCat = sub_cat_toExtract.filter((global_cat_object) => {
+                console.log(typeof global_cat_object[0][0]);
+                return global_cat_object[0][0].toString() === e.target.value
+            })
+            console.log("jkygijkghk9999999999999999", filterSubCat);
+            setSubCategory(Object.entries(filterSubCat[0][1]));
+
         }
         catch (e) {
             console.log(e);
         }
+        console.log(e);
     }
 
 
     const handleSubCatChange = async (e) => {
-        console.log("sub cat select e target", e.target.value);
         setSubCatSelect(e.target.value)
     }
 
-
-    const handleColorSelect = (e) => {
-        console.log("in the color handle event ", e.target.value);
-        setColor("test")
+    const handleColorSelect = (selected_color) =>{
+        setColor(selected_color)
     }
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("event click e targetsave ", e);
-        // const {item_id, category_id, sub_cat, color} = 
+        const[category_id, sub_cat, color_select]= [category_select, sub_cat_select, color]
         const add_content_item = async () => {
+            console.log(typeof color);
             try {
-                // console.log(state);
-                console.log("item_id", this.item_id);
-                console.log("category_id", this.category_id);
-                console.log("sub_cat", this.sub_cat);
-                console.log("sub_colorat", this.color);
-
+                const  to_db = await fetch('/item_content',{
+                    method:'POST',
+                    headers:{
+                        "content-Type":'application/json'
+                    },
+                    body:(JSON.stringify({category_id, sub_cat, color_select}))
+                })
+                const data = await to_db.json()
+                console.log("theDAT",data);
             }
 
             catch (e) {
@@ -83,21 +119,23 @@ const AddItemContent = (props) => {
             <div className='item_content_form'>
 
 
+
                 <form className='add_item_form' onSubmit={handleSubmit} >
 
                     <Col xs={12} md={5} lg={4} className='form_layout'>
 
                         <label> Select Category</label>
                         <select name='category_select' className='input_conatainer' title={"yoyo"} onChange={handleSelectChange} >
-
                             {
-                                console.log(typeof categories)
-                                // categories.map((item, index) => {
-                                    
-                                //     return (
-                                //         <option key={index} >{item.name}</option>
-                                //     )
-                                // })
+
+                                categories.map((item,i) => {
+                                    return (
+                                        <>
+                                            <option key={i} value={item[0]} >{item[1]}</option>
+                                        </>
+
+                                    )
+                                })
                             }
 
                         </select>
@@ -107,43 +145,36 @@ const AddItemContent = (props) => {
 
                             <>
                                 <select name='sub_cat_select' className='input_conatainer' onChange={handleSubCatChange} >
-                                    {/* {
-                                       sub_category.map((item, index) => {
+                                    {
+                                        subCategory ?
+
+
+
+                                        subCategory.map((element, i) => {
+                                            console.log(element);
+
                                             return (
-                                                <option key={index} value={item['sub_cat_id'] || ''} >{item.name}</option>
+                                                <>
+                                                    <option key={i} value={element[1].sub_cat_id} >{element[1].name}</option>
+                                                </>
                                             )
                                         })
-                                    } */}
+
+                                        :
+                                        console.log("just tel me the problem ")
+                                    }
                                 </select>
                             </>
                         }
 
                         <label> color</label>
-                        {
 
-                            <>
-                                <select name='color_select' className='input_conatainer' onChange={handleColorSelect} >
-
-
-
-                                    {/* {
-                                       color.map((item, index) => {
-                                            return (
-                                                <>
-                                                     <div className='color_dropDown'>
-                                                        <option key={index} value={item.name} >{item.name}</option>
- </div>
-                                                </>
-                                            )
-                                        })
-                                    } */}
-
-
-                                </select>
-                            </>
-                        }</Col>
+                        <Colors selected_color ={handleColorSelect}/>
+                        
+                       
                     {/* {this.props.type === 'edit_item' ? 'Save Changes' : 'Save'} */}
                     <Button type='submit' >BUTON</Button>
+                    </Col>
                 </form>
 
 
@@ -161,7 +192,8 @@ const AddItemContent = (props) => {
 
 
 
-export const ItemContentForm = () => {
+const ItemContentForm = (props) => {
+    console.log("we are here ", props);
     return (
         <Accordion >
             <Accordion.Item eventKey="0">
@@ -169,9 +201,9 @@ export const ItemContentForm = () => {
                 <Accordion.Body>
 
 
-                    <AddItemContent />
+                    <AddItemContent globalCat={props.global_sub_cat_per_cat} store_global_subCat_cat={props.store_global_subCat_cat}  />
 
-
+                    {/*  */}
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
@@ -180,13 +212,11 @@ export const ItemContentForm = () => {
 
 
 const mapStateToProps = (state) => {
-    console.log("this state", state);
-    const global_categories= state.global_categories;
-    const global_sub_cat_per_cat= state.global_sub_cat_per_cat;
+    // console.log("this state", state.global_sub_cat_per_cat);
 
     return {
-        global_categories,
-        global_sub_cat_per_cat
+        global_categories: state.global_categories,
+        global_sub_cat_per_cat: state.global_sub_cat_per_cat,
     };
 
 }
@@ -194,9 +224,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+
+        store_global_subCat_cat: (list) => { dispatch(set_global_subCat_cat(list)) }
     }
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddItemContent)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ItemContentForm)
 

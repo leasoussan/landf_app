@@ -1,38 +1,5 @@
-.modal-fullscreen .modal-content{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 95vw;
-    background-color: rgb(235, 250, 222) ;
-    /* opacity: 0.9; */
-}
-.modal-content {
-    display: flex;
-    align-items: center;
-    width: 90vh;
-    height: 90vh;
-    /* border: solid 4px red;
-    background-color: aqua; */
-}
-
-.display_item_modal{
-    width: 65%;
-    height: 80vh;
-    overflow-y: scroll;
-    scrollbar-color: transparent;
-    padding: 1rem;
-}
-.modal-body {
-    display: flex;
-    flex-direction: row;
-    width: 95%;
-    height: 95%;
-    overflow-y: scroll;
-}
-
-.imgae_item_detail{
-    width: 60%;
-    
+.form_layout div input{
+    border: solid 2px grey;
 }
 
 .add_item_form {

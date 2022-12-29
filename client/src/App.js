@@ -19,6 +19,7 @@ import { reducer } from './redux/reducer.js'
 
 export const AppContext = createContext(null);
 
+
 const store = createStore(reducer);
 
 
@@ -27,18 +28,18 @@ const store = createStore(reducer);
 function App() {
 
   const [token, setToken] = useState('')
-
+  const [isCategory , setIsCategory] = useState(false)
 
 
   return (
     <div className="App">
 
-      <AppContext.Provider value={{token, setToken}}>
+      <AppContext.Provider value={{token, setToken, isCategory , setIsCategory }}>
 
         <Provider store={store}>
           {/* <Fragment> */}
           <div className="App">
-
+          
             <Nav />
             <Routes>
               <Route path='/' element={<Home />} />

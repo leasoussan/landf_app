@@ -13,7 +13,7 @@ const initState = {
     token: '',
     add_item_load: [],
     user_found_item: [],
-    user_found_item: [],
+    user_lost_items: [],
     global_categories:[],
     global_sub_cat_per_cat:[],
     
@@ -26,12 +26,13 @@ export const reducer = (state = initState, action = {}) => {
         case TOKEN:
             console.log("reducer",action.payload);
             // return { ...state.token, token: action.payload }
-            return { ...state.token, token: action.payload }
+            return { ...state, token: action.payload }
 
         case ADD_ITEM_LOAD_STORED:
             return { ...state, add_item_load: action.payload }
        
         case USER_FOUND_LIST:
+
             return { ...state, user_found_items: action.payload }
             // return { ...state.user_found_item, user_found_items: action.payload }
 

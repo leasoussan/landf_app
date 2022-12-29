@@ -1,9 +1,61 @@
+.modal-fullscreen .modal-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 95vw;
+    background-color: rgb(235, 250, 222) ;
+    /* opacity: 0.9; */
+}
+.modal-content {
+    display: flex;
+    align-items: center;
+    width: 90vh;
+    height: 90vh;
+ 
+}
+
+.display_item_mainPanel{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+.display_item_modal{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    width: 50%;
+    height: 80vh;
+    scrollbar-color: transparent;
+    padding: 2rem;
+    background-color: rgb(250, 245, 240);
+}
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    height: 95%;
+    overflow-y: scroll;
+ 
+}
+
+.Item_detail_display{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.image_item_detail{
+    width: 30vw;
+    border-radius: 15%;
+    
+}
+
 .image_modal_item{
     width: 50%;
     height: 35%;
 }
 
 .item_detail_map div{
-    width: 60%;
+    width: 30vw;
     border: solig 7px purple;
 }

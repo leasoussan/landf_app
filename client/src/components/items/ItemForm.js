@@ -179,7 +179,7 @@ class ItemForm extends React.Component {
         
             const filterSubCat = sub_cat_toExtract.filter((global_cat_object) => {
                 // console.log();
-                return global_cat_object[0][0] == e.target.value
+                return global_cat_object[0][0] === e.target.value
             })       
             // console.log(typeof filterSubCat[0][1]);
            this.setState({sub_category:filterSubCat[0][1]})

@@ -15,7 +15,7 @@ const Dashboard = (props) => {
     const [foundList, setFoundList] = useState('')
     const [lostList, setLostList] = useState('')
     const [redirect, setRedirect] = useState(false)
-    const { token, setToken } = useContext(AppContext)
+    const {token, setToken, isCategory , setIsCategory } = useContext(AppContext)
     const [show, setShow] = useState(false);
    
 
@@ -24,8 +24,9 @@ const Dashboard = (props) => {
 
 
     useEffect(() => {
-        
-       
+        console.log("props", props);
+        setIsCategory(true)
+    //    Here I bring to REdux the found List of the user and lost item 
         const getUserFoundList = async () => {
 
             try {
@@ -75,9 +76,9 @@ const Dashboard = (props) => {
                         setLostList(data);
                         props.lostList_toLocal(data)
                     }
-                    else{
-                        navigate('/login')
-                    }
+                        else{
+                            navigate('/login')
+                        }
                     }
                     catch (e) {
                         console.log(e);
@@ -95,6 +96,8 @@ const Dashboard = (props) => {
         }
         getUserFoundList()
     }, [])
+
+
 
 
 
@@ -149,14 +152,7 @@ const Dashboard = (props) => {
 
                 <div className="foundItem_display">
                     <h1> LOST ITEMS </h1>
-
-
-                    {/* {
-                        localStorage.getItem('item_data_suspended') ?
-                    <Button >GET PENDING</Button>
-                    :
-                        'nothing'
-                    } */}
+              
 
                     <ul className="divide-y divide-gray-200">
 
@@ -201,6 +197,8 @@ const mapStateToProps = (state, ownProps) => {
     console.log(state);
     return {
         token: state.token,
+        global_categories: state.global_categories,
+        global_sub_cat_per_cat: state.global_sub_cat_per_cat,
 
     }
 }

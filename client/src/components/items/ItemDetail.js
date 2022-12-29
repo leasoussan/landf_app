@@ -8,10 +8,9 @@ import { DisplaySavedLocation } from '../additional/maps/DisplaySavedLocation.js
 import ItemForm from './ItemForm.js';
 import { Link } from 'react-router-dom';
 import CheckItemMatch from './CheckItemMatch.js';
-import UserFoundMatchSuggestion from '../additional/suggestions/UserFoundMatchSuggestion.js';
-import UserLostMatchSuggestion from '../additional/suggestions/UserLostMatchSuggestion.js';
+import FoundSuggestionContainer from '../additional/suggestions/FoundSuggestionContainer.js';
+import LostSuggestionContainer from '../additional/suggestions/LostSuggestionContainer.js';
 import '../../css/Suggestion.css'
-
 
 class ItemDetail extends Component {
   constructor(props) {
@@ -30,13 +29,7 @@ class ItemDetail extends Component {
   }
 
   componentDidMount() {
-    // try{
-    //   const get_token = await jwt_decode(token)
-    //   const user_id = await get_token.userId
-    //   setUserId(user_id)
 
-    // }
-          
 
     this.setState({item_id: this.props.id})
     this.setState({ type: 'display_item' })
@@ -95,8 +88,12 @@ class ItemDetail extends Component {
 
             {type === 'display_item' ?
               <>
+              <div className='display_item_mainPanel'>
                 <div className='display_item_modal'>
-                  <div>
+                 
+                 
+                 
+                  <div className='Item_detail_display'>
                   <h1>Item Details </h1>
                   <h3>{(this.state.found_date)}</h3>
                  
@@ -106,9 +103,9 @@ class ItemDetail extends Component {
                 
             
                 
-                 <img className='image_modal_item' src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-tools-hanging-on-wall-royalty-free-image-760251967-1563391812.jpg?crop=1.00xw:0.502xh;0,0.0561xh&resize=1200:*' />
+                 <img className='image_item_detail' src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-tools-hanging-on-wall-royalty-free-image-760251967-1563391812.jpg?crop=1.00xw:0.502xh;0,0.0561xh&resize=1200:*' />
                   
-                </div>
+              
                   
 
                   <div className='item_detail_map'>
@@ -116,21 +113,29 @@ class ItemDetail extends Component {
 
                   </div>
 
+               <div>
+                  <button onClick={this.handleEditItem}>EDIT ITEM</button>
+                  <button onClick={this.handleDelete} value={this.state.item_data.id}>DELET</button>
+                </div>
+                </div>
+
+                <div className='Sugggestion_board'>
+
+                 
+
                 { 
                   !this.state.item_data.is_found ?
-                      < UserLostMatchSuggestion item={this.item_data} userId={this.props.userId}/>
+                      < LostSuggestionContainer item={this.item_data} userId={this.props.userId}/>
                        :
-                       <UserFoundMatchSuggestion item={this.item_data} userId={this.props.userId}/>
+                       <FoundSuggestionContainer item={this.item_data} userId={this.props.userId}/>
 
 
                 }
                
-        
-                  <div>
-                  <button onClick={this.handleEditItem}>EDIT ITEM</button>
-                  <button onClick={this.handleDelete} value={this.state.item_data.id}>DELET</button>
                 </div>
-                
+                </div>
+
+
               </>
               :
               <>
@@ -148,9 +153,12 @@ class ItemDetail extends Component {
 
 
 
+
 const mapStateToProps = (state, ownProps) => {
   return {
       token: state.token,
+      global_categories: state.global_categories,
+      global_sub_cat_per_cat: state.global_sub_cat_per_cat,
 
   }
 }
@@ -159,8 +167,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
 
-      // foundList_toLocal: (list) => dispatch(user_foundList_toStore(list)),
-      // lostList_toLocal: (list) => dispatch(user_lostList_toStore(list))
+
   }
 }
 

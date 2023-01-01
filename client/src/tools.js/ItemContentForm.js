@@ -16,37 +16,41 @@ export const AddItemContent = (props) => {
     const [sub_cat_select, setSubCatSelect] = useState('');
     const [subCategory, setSubCategory] = useState('');
     const [color, setColor] = useState('')
+    const [item_id, setItemId] = useState('')
 
     useEffect(() => {
-        console.log(props);
+        setItemId(props.item.id);
         const checkState = () => {
+            console.log("in the use effect of the item contetn form ",props);
             if (props.globalCat.length === 0) {
                 console.log("the place to be", props.global_sub_cat_per_cat);
                 setIsCategory(true)
                 let subCat_Cat_global_object = [];
-                const get_sub_cat_global_list = async () => {
+                const get_sub_cat_list = async () => {
                     try {
                         const res = await fetch('/sub_cat', {
                             method: 'GET'
                         });
 
                         const data = await res.json();
+                        console.log("the datat", data);
                         const globalCategories = [...new Map(data.map(item => [item['subcat_cat_id'], item['cat_name']]))];
-
+                        console.log(globalCategories);
+                        setCategories(globalCategories)
                         globalCategories.forEach((cat) => {
+                            console.log("almost there" ,cat);
                             const subcat_perCat = data.filter(item => item['subcat_cat_id'] === cat[0])
                             const cat_andSubCat_item = [cat, subcat_perCat];
-                            setCategories(cat);
+                            console.log(cat_andSubCat_item);
                             subCat_Cat_global_object.push(cat_andSubCat_item);
-                            setCategories(cat_andSubCat_item)
-
+                            setSubCategory(subCat_Cat_global_object)
                         })
-                        props.store_global_subCat_cat(subCat_Cat_global_object)
+            
                     }
                     catch (e) {
                         console.log(e);
                     }
-                }; get_sub_cat_global_list()
+                }; get_sub_cat_list()
             }
         }; checkState()
 
@@ -63,13 +67,10 @@ export const AddItemContent = (props) => {
         console.log(e);
         try {
             setCategorySelect(e.target.value)
-            const sub_cat_toExtract = props.globalCat;
-            console.log(props.globalCat);
-            const filterSubCat = sub_cat_toExtract.filter((global_cat_object) => {
+            const filterSubCat = subCategory.filter((global_cat_object) => {
                 console.log(typeof global_cat_object[0][0]);
                 return global_cat_object[0][0].toString() === e.target.value
             })
-            console.log("jkygijkghk9999999999999999", filterSubCat);
             setSubCategory(Object.entries(filterSubCat[0][1]));
 
         }
@@ -91,19 +92,19 @@ export const AddItemContent = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+   
         const[category_id, sub_cat, color_select]= [category_select, sub_cat_select, color]
         const add_content_item = async () => {
-            console.log(typeof color);
             try {
                 const  to_db = await fetch('/item_content',{
                     method:'POST',
                     headers:{
                         "content-Type":'application/json'
                     },
-                    body:(JSON.stringify({category_id, sub_cat, color_select}))
+                    body:(JSON.stringify({category_id, sub_cat, color_select, item_id}))
                 })
                 const data = await to_db.json()
-                console.log("theDAT",data);
+                console.log("theDAT");
             }
 
             catch (e) {
@@ -127,7 +128,7 @@ export const AddItemContent = (props) => {
                         <label> Select Category</label>
                         <select name='category_select' className='input_conatainer' title={"yoyo"} onChange={handleSelectChange} >
                             {
-
+                                categories.length > 0  ?
                                 categories.map((item,i) => {
                                     return (
                                         <>
@@ -136,6 +137,8 @@ export const AddItemContent = (props) => {
 
                                     )
                                 })
+                                :
+                                console.log("categories",categories)
                             }
 
                         </select>
@@ -146,8 +149,7 @@ export const AddItemContent = (props) => {
                             <>
                                 <select name='sub_cat_select' className='input_conatainer' onChange={handleSubCatChange} >
                                     {
-                                        subCategory ?
-
+                                        subCategory.length > 0  ?
 
 
                                         subCategory.map((element, i) => {
@@ -161,7 +163,7 @@ export const AddItemContent = (props) => {
                                         })
 
                                         :
-                                        console.log("just tel me the problem ")
+                                        console.log("subCategory",subCategory)
                                     }
                                 </select>
                             </>
@@ -193,15 +195,15 @@ export const AddItemContent = (props) => {
 
 
 const ItemContentForm = (props) => {
-    console.log("we are here ", props);
+   
     return (
         <Accordion >
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Add Item Content</Accordion.Header>
                 <Accordion.Body>
 
-
-                    <AddItemContent globalCat={props.global_sub_cat_per_cat} store_global_subCat_cat={props.store_global_subCat_cat}  />
+               
+                    <AddItemContent item ={props.item} store_global_subCat_cat={props.store_global_subCat_cat}   globalCat={props.global_sub_cat_per_cat} />
 
                     {/*  */}
                 </Accordion.Body>

@@ -17,14 +17,32 @@ export const AddItemIdentification = (props) => {
     useEffect(() => {
         const set_identification_type =()=>{
             const identificationType = ['first_name', 'last_name', 'credit_card', 'phone_number', 'address', 'company_name', 'other']
-            const input_type = ''
             const identificationList = Object.entries(identificationType)
-            
-            identificationList.forEach(item=>  [item, input_type])
-            console.log(identificationList);
-           setIdentificationType(identificationList)
+            const input_type_list =[]
+            const input_type_set = ()=>{ 
+                
+                for (const item of identificationList){
+                if(item[0] === 'first_name' || 'last_name' || 'other' ){
+                    // console.log("hola");
+                    // if(item === 'first_name' || 'last_name' || 'other' ){
+                    //     const item_input = [item, ('text')]
+                    //     input_type_list.push(item_input)
+                    // }else {
+                    //     const item_input = [item, ('number')];
+                    //     console.log(item_input);
+                    //     input_type_list.push(item_input)
+
+                    }
+                  
+                }
+                console.log(input_type_list);
+
+                };input_type_set()
+    
         };
-        set_identification_type()
+       
+        set_identification_type();
+       
     }, [])
 
     
@@ -72,13 +90,12 @@ export const AddItemIdentification = (props) => {
                                     //         <option key={`${i}`} value={item[0]} >{item[1]}</option>
                                     //     </>
 
-                                    // )
+                                //     )
                                 // })
                             }
 
                         </select>
-                       <input/>
-                 
+                        <input type="text" name="name" />                 
                     <Button type='submit' >BUTON</Button>
                     </Col>
                 </form>

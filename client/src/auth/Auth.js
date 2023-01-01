@@ -15,8 +15,10 @@ export const Auth = (props) => {
                 const response = await axios.get('/token')
                 setToken(response.data.token)
                 setRedirect(true)
+               
             }catch(e){
                 setToken(null)
+               
                 navigate('/login')
             }
         }

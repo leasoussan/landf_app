@@ -29,7 +29,7 @@ class ItemDetail extends Component {
   }
 
   componentDidMount() {
-
+      console.log(this.props);
 
     this.setState({item_id: this.props.id})
     this.setState({ type: 'display_item' })
@@ -39,6 +39,7 @@ class ItemDetail extends Component {
         const data = await response.json();
         const item = data[0];
         this.setState({ item_data: item });
+        console.log(item);
         const lat = item.lat;
         const lng = item.len;
         this.setState({ location: [lat, lng] })
@@ -70,7 +71,6 @@ class ItemDetail extends Component {
 
   render() {
     const type = this.state.type
-    // const 
     return (
       <>
    
@@ -125,9 +125,12 @@ class ItemDetail extends Component {
 
                 { 
                   !this.state.item_data.is_found ?
-                      < LostSuggestionContainer item={this.item_data} userId={this.props.userId}/>
+                      < LostSuggestionContainer item={this.state.item_data} userId={this.props.userId}/>
                        :
-                       <FoundSuggestionContainer item={this.item_data} userId={this.props.userId}/>
+                       <>
+                       <FoundSuggestionContainer item={this.state.item_data} userId={this.props.userId}/>
+
+                       </>
 
 
                 }

@@ -39,7 +39,7 @@ function App() {
         <Provider store={store}>
           {/* <Fragment> */}
           <div className="App">
-          
+      
             <Nav />
             <Routes>
               <Route path='/' element={<Home />} />

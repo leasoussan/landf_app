@@ -9,12 +9,11 @@ import ItemIdentificationForm from '../../../tools.js/ItemIdentificationForm.js'
 
 
 
-const FoundSuggestionContainer = ({item}) => {
-    const [getItem, setGetItem]= useState('')
+const FoundSuggestionContainer = (props) => {
     
     useEffect(() =>{
         try{
-            setGetItem(item)
+            // const find_id_conte = 
 
         }
         catch(e){
@@ -22,8 +21,8 @@ const FoundSuggestionContainer = ({item}) => {
         }
 
     })
- 
-    
+ console.log("found suggestion props ITEM CHECK  ", props);
+
     return (
         <Accordion >
             <Accordion.Item eventKey="0">
@@ -31,7 +30,7 @@ const FoundSuggestionContainer = ({item}) => {
                 <Accordion.Body className='suggestion_accordion_body'>
 
 
-                <UserFoundMatchSuggestion item={item} />
+                <UserFoundMatchSuggestion item={props.item} />
 
 
                 </Accordion.Body>
@@ -49,7 +48,7 @@ const FoundSuggestionContainer = ({item}) => {
 export const UserFoundMatchSuggestion = (props) => {
     const [foundSugestion, setFoundSuggestion] = useState('');
     // const [item, setItem]=useState('')
-    // console.log(props.item)
+    console.log(props.item)
 
    
 
@@ -61,6 +60,7 @@ export const UserFoundMatchSuggestion = (props) => {
              
                 <div className='suggestion_box'>
                     <h4>Describe content of Item</h4>
+                
                     <ItemContentForm item={props.item}/>
 
                 </div>

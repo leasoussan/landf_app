@@ -22,10 +22,19 @@ const Dashboard = (props) => {
     // i nened to check toekn if use effete with try and cathc to avoid breaking -error
     const navigate = useNavigate();
 
+    useEffect(()=>{
+        console.log('props.global_categories',props.global_categories.length === 0);
+        console.log('props.global_sub_cat_per_cat',props.global_sub_cat_per_cat.length === 0);
+        if(props.global_categories.length === 0 ||  props.global_sub_cat_per_cat.length === 0){
+            console.log("checking the propr " ,props);
+            setIsCategory(isCategory)
+        }
+        console.log(!isCategory);
+  
+   
+    
 
-    useEffect(() => {
-        console.log("props", props);
-        setIsCategory(true)
+
     //    Here I bring to REdux the found List of the user and lost item 
         const getUserFoundList = async () => {
 

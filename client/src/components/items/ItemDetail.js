@@ -29,8 +29,6 @@ class ItemDetail extends Component {
   }
 
   componentDidMount() {
-      console.log(this.props);
-
     this.setState({item_id: this.props.id})
     this.setState({ type: 'display_item' })
     const getItemDetail = async () => {
@@ -39,7 +37,6 @@ class ItemDetail extends Component {
         const data = await response.json();
         const item = data[0];
         this.setState({ item_data: item });
-        console.log(item);
         const lat = item.lat;
         const lng = item.len;
         this.setState({ location: [lat, lng] })

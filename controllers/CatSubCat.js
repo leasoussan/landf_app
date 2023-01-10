@@ -7,7 +7,6 @@ export const getCategory = (req,res) =>{
     db.select('*')
     .from('category')
     .then(rows => {
-        console.log("huida _ answer Cōngmíng de ", rows)
         res.json(rows)
 
     })
@@ -25,7 +24,6 @@ export const getSubCat = (req,res) =>{
     .from('sub_cat', 'category')
     .fullOuterJoin('category', 'sub_cat.subcat_cat_id' , 'category.cat_id')
     .then(rows => {
-        console.log("huida _ answer Cōngmíng de ", rows)
         res.json(rows)
 
     })

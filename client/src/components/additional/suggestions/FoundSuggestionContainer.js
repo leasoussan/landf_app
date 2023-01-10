@@ -4,6 +4,7 @@ import ItemContentForm from '../../../tools.js/ItemContentForm.js';
 import Button from 'react-bootstrap/esm/Button';
 import Accordion from 'react-bootstrap/Accordion';
 import ItemIdentificationForm from '../../../tools.js/ItemIdentificationForm.js';
+import CheckItemMatch from '../../items/CheckItemMatch';
 
 
 
@@ -11,9 +12,21 @@ import ItemIdentificationForm from '../../../tools.js/ItemIdentificationForm.js'
 
 const FoundSuggestionContainer = (props) => {
     
+    const [ ItemContent, setItemContent ] = useState('')
+
+
+
     useEffect(() =>{
+
         try{
-            // const find_id_conte = 
+           
+            const get_item_context = async()=>{
+                const item_id = props.item.id
+                const check_db = await fetch(`item_content_detail/${item_id}` )
+                const res = await check_db.json()
+                console.log("log the matters here", res);
+                  
+               };get_item_context()
 
         }
         catch(e){
@@ -21,7 +34,9 @@ const FoundSuggestionContainer = (props) => {
         }
 
     })
- console.log("found suggestion props ITEM CHECK  ", props);
+
+
+   
 
     return (
         <Accordion >
@@ -29,7 +44,7 @@ const FoundSuggestionContainer = (props) => {
                 <Accordion.Header>Add Details about what you found:</Accordion.Header>
                 <Accordion.Body className='suggestion_accordion_body'>
 
-
+                    <CheckItemMatch/>
                 <UserFoundMatchSuggestion item={props.item} />
 
 
@@ -47,15 +62,31 @@ const FoundSuggestionContainer = (props) => {
 
 export const UserFoundMatchSuggestion = (props) => {
     const [foundSugestion, setFoundSuggestion] = useState('');
-    // const [item, setItem]=useState('')
-    console.log(props.item)
+    
+    try{
+          
+        const item_id = props.item.id
+        const get_item_context = async()=>{
+                console.log("item_id", item_id);
+         
+            const check_db = await fetch(`item_content_detail/${item_id}` )
+            const res = await check_db.json()
+            console.log("log the matters here", res);
+              
+           };get_item_context()
 
-   
+    }
+    catch(e){
+        console.log(e);
+    }
 
 
 
     return (
         <>
+
+
+
             <div className="foundSuggestion">
              
                 <div className='suggestion_box'>

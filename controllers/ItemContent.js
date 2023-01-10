@@ -26,14 +26,15 @@ export const add_item_content = (req, res) => {
 
 export const item_content_detail = async (req, res) => {
     console.log("what are ou item_content_detail?? ", req.body);
-    const { id } = req.params;
-    console.log("item_content id - readt item_content detail", id);
+    const { item_id } = req.params;
+    console.log("item_content id - readt item_content detail", item_id);
     try {
          const getItemContent_detail = await db('item_content')
-            .where({ id :id })
+            .where({ item_id :item_id })
             .select('*')
          
-        res.json(getItemContent_detail)    
+        res.json(getItemContent_detail)   
+
     }
     catch (e) {
         console.log(e);

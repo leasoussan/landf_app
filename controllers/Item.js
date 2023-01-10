@@ -25,7 +25,7 @@ export const add_item = (req, res) => {
 // ITEM DETAIL
 
 export const item_detail = async (req, res) => {
-    console.log("what are ou sayng", req.body);
+    console.log("____________________________item_detail controler", req.body);
     const { id } = req.params;
     console.log(id);
     try {
@@ -91,7 +91,7 @@ export const delet = (req, res) => {
 
 
 export const getUserFoundItem = (req, res) => {
-    console.log("icic cest req et toi ", req.params);
+    console.log("_________________________getUserFoundItem controler___ ", req.params);
     const { user_id } = req.params
     db('item')
         .select('*')
@@ -142,12 +142,12 @@ export const getFoundItemPool = (req, res) => {
     // const { user_id, category_id, sub_cat_id, found_date , location} = req.params
     // console.log();
     const { user_id, category_id, sub_category} = req.params
-    console.log("icic cest req et toi ", req.params);
+    console.log("_________________________-getFoundItemPool ", req.params);
     db('item')
         .select('*')
         .whereNot({ user_id: user_id, is_lost: true})
         // , resolved: true 
-        .where({category_id:category_id,
+        .where({category_id:category_id ,
         sub_category:sub_category,
             // found_date:found_date,
             // location:location

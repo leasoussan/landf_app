@@ -175,7 +175,7 @@ export const AddItemContent = (props) => {
                         
                        
                     {/* {this.props.type === 'edit_item' ? 'Save Changes' : 'Save'} */}
-                    <Button type='submit' >BUTON</Button>
+                    <Button type='submit' >SAVE</Button>
                     </Col>
                 </form>
 

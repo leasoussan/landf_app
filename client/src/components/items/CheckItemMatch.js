@@ -52,6 +52,7 @@ class CheckItemMatch extends React.Component {
             const check_items_pool = await fetch(`/${type}_item_pool/${user_id}/${cat_id}/${sub_cat_id}`)
             const data = await check_items_pool.json();
             if(data){
+                console.log("Here are the matched items", data);
                this.setState({suggestion_list:data})
                this.setState({match:true})
                

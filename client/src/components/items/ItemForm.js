@@ -134,10 +134,13 @@ class ItemForm extends React.Component {
 
             case 'get_pending_item':
                 try {
+                    console.log("We are retrieving data here",this.props.type );
                     const decode_token = jwt_decode(this.props.token)
                     this.setState({ user_id: decode_token.userId })
+                    console.log("getFromLocalStorage('pending_data')", getFromLocalStorage('pending_data'));
                     set_retrieved_item_data(getFromLocalStorage('pending_data'))
-                    console.log("user id ", decode_token.user_id);
+                    // console.log("user id ", decode_token.user_id);
+
 
                 }
                 catch (e) {
@@ -181,8 +184,8 @@ class ItemForm extends React.Component {
                 // console.log();
                 return global_cat_object[0][0] === e.target.value
             })       
-            // console.log(typeof filterSubCat[0][1]);
-           this.setState({sub_category:filterSubCat[0][1]})
+            console.log("log of 184 item form ", filterSubCat[0][1]);
+        //    this.setState({sub_category:filterSubCat[0][1]})
             
         }
         catch (e) {
@@ -221,20 +224,20 @@ class ItemForm extends React.Component {
 
             } catch (e) {
                 console.log("in the verif CATCH ");
-                addToLocatStorage('pending_data', (this.state))
+                addToLocatStorage('pending_data', this.state)
                 this.setState({ redirect_register: true })
                 alert("you have to do somethng")
             }
         }
         verify()
 
-        if (!this.props.token) {
-            console.log("this is the place");
+        // if (!this.props.token) {
+        //     console.log("this is the place");
 
 
 
 
-        } else {
+        // } else {
 
             const add_item = async () => {
                 try {
@@ -262,7 +265,7 @@ class ItemForm extends React.Component {
                             });
                             console.log(results);
                             const data = await results.json();
-                            console.log(data);
+                            console.log("data of the saving item ",data);
                             localStorage.clear();
                             this.setState({ show: false })
                             console.log("befor exit");
@@ -282,7 +285,7 @@ class ItemForm extends React.Component {
 
             }; add_item();
 
-        }
+        // }
     }
 
     render() {
@@ -360,7 +363,7 @@ class ItemForm extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log("this state", state.list);
+    // console.log("this state", state.list);
 
     return {
         global_categories: state.global_categories,

@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import '../css/ItemForm.css'
 import React,{ creteContext, useContext, useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
+    import jwt_decode from 'jwt-decode';
 import { navigate, useNavigate } from 'react-router-dom';
 import ItemForm from './items/ItemForm';
 import { AppContext } from '../App';
@@ -93,6 +93,7 @@ const Home = (props) => {
         const check_data_exisit = () => {
             const data = getFromLocalStorage('pending_data')
             if (data) {
+                console.log("Local storage data", data);
                 setType('get_pending_item')
                 // const get_token = jwt_decode(token)
                 // const user_id =  get_token.userId

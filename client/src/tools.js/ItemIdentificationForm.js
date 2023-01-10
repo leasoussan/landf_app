@@ -13,61 +13,60 @@ import Colors from './Colors.js';
 
 export const AddItemIdentification = (props) => {
     const { token, setToken, isCategory, setIsCategory } = useContext(AppContext)
-    const [identifType,setIdentificationType] =useState('')
+    const [identifType, setIdentificationType] = useState('')
+
     useEffect(() => {
-        const set_identification_type =()=>{
+        const set_identification_type = () => {
             const identificationType = ['first_name', 'last_name', 'credit_card', 'phone_number', 'address', 'company_name', 'other']
             const identificationList = Object.entries(identificationType)
-            const input_type_list =[]
-            const input_type_set = ()=>{ 
-                
-                for (const item of identificationList){
-                if(item[0] === 'first_name' || 'last_name' || 'other' ){
-                    // console.log("hola");
-                    // if(item === 'first_name' || 'last_name' || 'other' ){
-                    //     const item_input = [item, ('text')]
-                    //     input_type_list.push(item_input)
-                    // }else {
-                    //     const item_input = [item, ('number')];
-                    //     console.log(item_input);
-                    //     input_type_list.push(item_input)
+            const input_type_list = []
+            const input_type_set = () => {
+
+                for (const item of identificationList) {
+                    if (item[0] === 'first_name' || 'last_name' || 'other') {
+                        console.log("hola");
+                        if (item === 'first_name' || 'last_name' || 'other') {
+                            const item_input = [item, ('text')]
+                            input_type_list.push(item_input)
+                        } else {
+                            const item_input = [item, ('number')];
+                            console.log(item_input);
+                            input_type_list.push(item_input)
+
+                        }
 
                     }
-                  
-                }
-                console.log(input_type_list);
-
-                };input_type_set()
-    
+                    console.log(input_type_list);
+                };
+            }; input_type_set()
         };
-       
         set_identification_type();
-       
+
     }, [])
 
-    
-    
+
+
 
 
     const handleSelectChange = async (e) => {
         console.log(e);
         try {
-            
+
             console.log(props.globalCat);
-         
-            }
+
+        }
         catch (e) {
             console.log(e);
         }
-      
- 
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        
-    }
-    
+
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+
+        }
+
     }
     return (
         <>
@@ -83,20 +82,20 @@ export const AddItemIdentification = (props) => {
                         <select name='identification_detail' className='input_conatainer' title={"d"} onChange={handleSelectChange} >
                             {
 
-                                    //      identifType.map((item,i) => {
-                                    //         console.log(item,i);
-                                    // return (
-                                    //     <>
-                                    //         <option key={`${i}`} value={item[0]} >{item[1]}</option>
-                                    //     </>
+                                //      identifType.map((item,i) => {
+                                //         console.log(item,i);
+                                // return (
+                                //     <>
+                                //         <option key={`${i}`} value={item[0]} >{item[1]}</option>
+                                //     </>
 
                                 //     )
                                 // })
                             }
 
                         </select>
-                        <input type="text" name="name" />                 
-                    <Button type='submit' >BUTON</Button>
+                        <input type="text" name="name" />
+                        <Button type='submit' >SAVE</Button>
                     </Col>
                 </form>
 
@@ -116,7 +115,7 @@ export const AddItemIdentification = (props) => {
 
 
 const ItemIdentificationForm = (props) => {
-  
+
     return (
         <Accordion >
             <Accordion.Item eventKey="0">
@@ -124,7 +123,7 @@ const ItemIdentificationForm = (props) => {
                 <Accordion.Body>
 
 
-                    <AddItemIdentification   />
+                    <AddItemIdentification />
 
                 </Accordion.Body>
             </Accordion.Item>
@@ -137,7 +136,7 @@ const mapStateToProps = (state) => {
     console.log("this state", state);
 
     return {
-      
+
     };
 
 }
@@ -146,7 +145,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
 
-      
+
     }
 }
 

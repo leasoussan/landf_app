@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import { AppContext } from '../../App.js';
 import { connect } from 'react-redux';
 import { get_token } from '../../redux/actions.js';
+import jwt_decode from 'jwt-decode';
 
 const LoginRegistrationForm = (props) => {
 
@@ -42,9 +43,12 @@ const LoginRegistrationForm = (props) => {
                     }
                 })
                 console.log("line 34 here ", response.data.token);
+                const decode = jwt_decode(response.data.token)
+                const userId = decode.userId
+
                 setToken(response.data.token);
                 props.get_token(response.data.token) 
-                navigate('/')
+                navigate(`/dashboard/${userId}`)
             } catch(e){
                 setMsg(e.msg)
             }
